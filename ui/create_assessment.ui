@@ -17,7 +17,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Dynamic Stability Assessment</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLineEdit" name="le_name">
@@ -43,7 +43,7 @@
      <rect>
       <x>30</x>
       <y>30</y>
-      <width>91</width>
+      <width>121</width>
       <height>16</height>
      </rect>
     </property>
@@ -57,7 +57,7 @@
      <string>Name of New Assessment</string>
     </property>
     <property name="text">
-     <string>Name</string>
+     <string>Assessment Name</string>
     </property>
    </widget>
    <widget class="QLabel" name="lbl_description">
@@ -122,7 +122,7 @@
      <string>Models</string>
     </property>
    </widget>
-   <widget class="QListWidget" name="listWidget">
+   <widget class="QListWidget" name="lw_models">
     <property name="geometry">
      <rect>
       <x>350</x>
@@ -148,22 +148,6 @@
      <string>Add New</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pb_add_existing">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>100</y>
-      <width>121</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="statusTip">
-     <string>Add existing Model to the list of Assessment's models</string>
-    </property>
-    <property name="text">
-     <string>Add Existing</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pb_remove">
     <property name="geometry">
      <rect>
@@ -180,6 +164,44 @@
      <string>Remove</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pb_save">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>480</y>
+      <width>141</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string>Save Assessment</string>
+    </property>
+    <property name="text">
+     <string>Save</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pb_edit">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>100</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="statusTip">
+     <string>Edit Model from the list of Assessment's models</string>
+    </property>
+    <property name="text">
+     <string>Edit</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -187,7 +209,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

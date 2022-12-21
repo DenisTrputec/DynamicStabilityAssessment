@@ -4,12 +4,12 @@ from dsa.scenario import Scenario
 
 
 class Model:
-    def __init__(self, name: str, raw_path: str = "", dyr_path: str = "", description: str = "",
+    def __init__(self, name: str, description: str = "", raw_path: str = "", dyr_path: str = "",
                  scenarios: List[Scenario] = None):
         self.name = name
+        self.description = description
         self.raw_path = raw_path
         self.dyr_path = dyr_path
-        self.description = description
         self.scenarios = scenarios if scenarios is not None else []
 
     def __str__(self):
@@ -29,6 +29,9 @@ class Model:
             for scenario in self.scenarios:
                 text += f"\n\t{scenario.name}"
         return text
+
+    def __to_json(self):
+        return dict(name=self.name, description=self.description, raw_path=self.raw_path, dyr_path=self.dyr_path)
 
 
 if __name__ == '__main__':

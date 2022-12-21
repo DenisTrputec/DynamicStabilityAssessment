@@ -1,6 +1,15 @@
+import json
 from typing import List
 
 from dsa.model import Model
+
+
+class ComplexEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if hasattr(obj, 'to_json'):
+            return obj.to_json()
+        else:
+            return json.JSONEncoder.default(self, obj)
 
 
 class Assessment:
@@ -22,6 +31,17 @@ class Assessment:
             for model in self.models:
                 text += f"\n\t{model.name}"
         return text
+
+    def __to_json(self):
+        return dict(name=self.name, description=self.description, models=self.models)
+
+    def save(self):
+        # print(self.__to_json())
+        # json_string = json.dumps(self.__to_json(), cls=ComplexEncoder, indent=4)
+        # print(json_string)
+        json_string = json.dumps(self, default=lambda o: o.__dict__, indent=4)
+        with open(f"assessments/{self.name}.json", "w") as outfile:
+            outfile.write(json_string)
 
 
 if __name__ == '__main__':
