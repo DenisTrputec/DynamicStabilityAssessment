@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PyQt6.QtWidgets import QMainWindow, QListWidgetItem
+from PyQt6.QtWidgets import QMainWindow
 from PyQt6 import uic
 
 from dsa.assessment import Assessment
@@ -31,6 +31,8 @@ class CreateAssessment(QMainWindow):
 
     def __edit(self):
         print("Editing Model")
+        row_number = self.lw_models.currentRow()
+        self.__child = CreateModel(self, self.__models[row_number])
 
     def __remove(self):
         print("Removing Model")
@@ -47,6 +49,13 @@ class CreateAssessment(QMainWindow):
         print("Adding model to list")
         self.__models.append(model)
         self.lw_models.addItem(model.name)
+
+    def update_model(self, model):
+        print("Updating model in list")
+        row_number = self.lw_models.currentRow()
+        self.__models[row_number] = model
+        self.lw_models.takeItem(row_number)
+        self.lw_models.insertItem(row_number, model.name)
 
     def closeEvent(self, event):
         print(f"Closing {self.__class__.__name__}")
