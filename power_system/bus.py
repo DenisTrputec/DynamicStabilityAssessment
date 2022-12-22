@@ -8,3 +8,19 @@ class Bus:
         self.base = base_voltage
         self.type = bus_type
         self.cc = control_center
+
+    def __str__(self):
+        return f"Bus: {self.number} {self.name}"
+
+    def info(self):
+        return f"\nBus:" \
+               f"\nNumber: {self.number}" \
+               f"\nName: {self.name}" \
+               f"\nBase Voltage: {self.base}" \
+               f"\nCode Type: {self.type}" \
+               f"\nControl Center: {self.cc.name}"
+
+
+if __name__ == '__main__':
+    b = Bus(10000, "Zagreb", 400.0, 1, ControlCenter.NDC)
+    print(b.info())
