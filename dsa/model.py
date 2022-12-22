@@ -30,9 +30,6 @@ class Model:
                 text += f"\n\t{scenario.name}"
         return text
 
-    def __to_json(self):
-        return dict(name=self.name, description=self.description, raw_path=self.raw_path, dyr_path=self.dyr_path)
-
 
 if __name__ == '__main__':
     s1 = Scenario("Scene1")
