@@ -6,13 +6,13 @@ from PyQt6 import uic
 from dsa.model import Model
 
 if TYPE_CHECKING:
-    from py_ui.create_assessment import CreateAssessment
+    from ui_py.ui_assessment import UIAssessment
 
 
-class CreateModel(QMainWindow):
-    def __init__(self, parent: "CreateAssessment", model: Model = None):
+class UIModel(QMainWindow):
+    def __init__(self, parent: "UIAssessment", model: Model = None):
         super().__init__()
-        uic.loadUi("ui/create_model.ui", self)
+        uic.loadUi("ui/model.ui", self)
         self.__model = model
         self.parent = parent
         self.parent.hide()

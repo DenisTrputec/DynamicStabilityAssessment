@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QApplication, QMainWindow
 from PyQt6 import uic
 
-from py_ui.create_assessment import CreateAssessment
+from ui_py.ui_assessment import UIAssessment
 
 
 class MainMenu(QMainWindow):
@@ -15,11 +15,14 @@ class MainMenu(QMainWindow):
 
     def __create_assessment(self):
         print("Creating New Assessment")
-        self.__child = CreateAssessment(self)
+        self.__child = UIAssessment(self)
 
     def __load_assessment(self):
         print("Loading Assessment")
 
+    def close_child_window(self):
+        self.__child = None
+        self.show()
 
 if __name__ == '__main__':
     app = QApplication([])

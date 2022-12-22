@@ -4,16 +4,16 @@ from PyQt6.QtWidgets import QMainWindow
 from PyQt6 import uic
 
 from dsa.assessment import Assessment
-from py_ui.create_model import CreateModel
+from ui_py.ui_model import UIModel
 
 if TYPE_CHECKING:
     from dynamic_stability_assessment import MainMenu
 
 
-class CreateAssessment(QMainWindow):
+class UIAssessment(QMainWindow):
     def __init__(self, parent: "MainMenu"):
         super().__init__()
-        uic.loadUi("ui/create_assessment.ui", self)
+        uic.loadUi("ui/assessment.ui", self)
         self.__child = None
         self.__models = []
         self.parent = parent
@@ -27,12 +27,13 @@ class CreateAssessment(QMainWindow):
 
     def __add_new(self):
         print("Adding New Model")
-        self.__child = CreateModel(self)
+        self.__child = UIModel(self)
 
     def __edit(self):
         print("Editing Model")
         row_number = self.lw_models.currentRow()
-        self.__child = CreateModel(self, self.__models[row_number])
+        if row_number > 0:
+            self.__child = UIModel(self, self.__models[row_number])
 
     def __remove(self):
         print("Removing Model")
@@ -59,5 +60,5 @@ class CreateAssessment(QMainWindow):
 
     def closeEvent(self, event):
         print(f"Closing {self.__class__.__name__}")
-        self.parent.show()
+        self.parent.close_child_window()
         event.accept()
