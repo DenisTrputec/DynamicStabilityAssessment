@@ -1,0 +1,4 @@
+venv
+.idea
+input_files
+*__pycache__*

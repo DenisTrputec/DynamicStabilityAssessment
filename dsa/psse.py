@@ -1,16 +1,20 @@
 import os
 import sys
+import json
 
 import psse_errors
 from power_system.bus import Bus
+from power_system.branch import Branch
+from power_system.machine import Machine
 from power_system.control_center import ControlCenter
 
-PSSE_PATH = r"C:\Instalacije\PTI\PSSE35\35.3\PSSBIN"
-PSSPY_PATH = r"C:\Instalacije\PTI\PSSE35\35.3\PSSPY37"
 
-for PATH in [PSSE_PATH, PSSPY_PATH]:
-    sys.path.append(PATH)
-    os.environ['PATH'] = os.environ['PATH'] + ';' + PATH
+with open('../config.json') as handle:
+    config = json.load(handle)
+    for key in config["psse"]:
+        path = config["psse"][key]
+        sys.path.append(path)
+        os.environ['PATH'] = os.environ['PATH'] + ';' + path
 
 import psspy
 
@@ -33,22 +37,72 @@ class PSSE:
 
     @staticmethod
     def read_busses():
-        _, (numbers, types, areas) = psspy.abusint(flag=2, string=["NUMBER", "TYPE", "AREA"])
-        _, bases = psspy.abusreal(flag=2, string=["BASE"])
-        _, names = psspy.abuschar(flag=2, string=["NAME"])
+        _, (numbers, types, areas) = psspy.abusint(string=["NUMBER", "TYPE", "AREA"])
+        _, bases = psspy.abusreal(string=["BASE"])
+        _, names = psspy.abuschar(string=["NAME"])
 
         bus_list = []
         for number, bus_type, cc_number, base_voltage, name in zip(numbers, types, areas, bases[0], names[0]):
             bus_list.append(Bus(number, name, base_voltage, bus_type, ControlCenter(cc_number)))
         return bus_list
 
+    @staticmethod
+    def read_branches(bus_list=None):
+        if not bus_list:
+            bus_list = PSSE.read_busses()
+
+        _, (from_numbers, to_numbers, statuses) = psspy.abrnint(string=["FROMNUMBER", "TONUMBER", "STATUS"])
+        _, branch_ids = psspy.abrnchar(string=["ID"])
+
+        branch_list = []
+        for b1, b2, statuses, branch_id in zip(from_numbers, to_numbers, statuses, branch_ids[0]):
+            bus1, bus2 = PSSE.__find_bus(bus_list, b1, b2)
+            branch_list.append(Branch(bus1, bus2, branch_id, statuses))
+        return branch_list
+
+    @staticmethod
+    def read_machines(bus_list=None):
+        if not bus_list:
+            bus_list = PSSE.read_busses()
+
+        _, (bus_numbers, statuses) = psspy.amachint(string=["NUMBER", "STATUS"])
+        _, machine_ids = psspy.amachchar(string=["ID"])
+
+        machine_list = []
+        for number, status, machine_id in zip(bus_numbers, statuses, machine_ids[0]):
+            bus = PSSE.__find_bus(bus_list, number)
+            machine_list.append(Machine(bus, machine_id, status))
+        return machine_list
+
+    @staticmethod
+    def __find_bus(bus_list, bus_number1, bus_number2=None):
+        bus1 = None
+        bus2 = None
+        flag1 = False
+        flag2 = True if bus_number2 else False
+
+        for bus in bus_list:
+            if bus.number == bus_number1:
+                bus1 = bus
+            elif bus.number == bus_number2:
+                bus2 = bus
+            if flag1 and flag2:
+                break
+
+        if not bus2:
+            return bus1
+        else:
+            return bus1, bus2
+
 
 if __name__ == '__main__':
     PSSE.initialize()
     try:
-        PSSE.read_raw(r"D:\Programi\DynamicStabilityAssessment\input_data\sample.raw")
+        PSSE.read_raw(r"D:\Programiranje\Moje aplikacije\Python\DynamicStabilityAssessment\input_files\sample.raw")
     except Exception as e:
         print(e)
     buses = PSSE.read_busses()
-    for bus in buses:
-        print(bus, bus.cc.name)
+    branches = PSSE.read_branches()
+    machines = PSSE.read_machines()
+    for m in machines:
+        print(m)
