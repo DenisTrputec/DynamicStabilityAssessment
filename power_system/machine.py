@@ -1,17 +1,17 @@
 from power_system.bus import Bus
 
 
-class Generator:
-    def __init__(self, bus: Bus, generator_id: str, status: int):
+class Machine:
+    def __init__(self, bus: Bus, machine_id: str, status: int):
         self.bus = bus
-        self.id = generator_id
+        self.id = machine_id
         self.status = status
 
     def __str__(self):
-        return f"Generator: {self.bus.number} {self.bus.name} {self.id}"
+        return f"Machine: {self.bus.number} {self.bus.name} {self.id}"
 
     def info(self):
-        return f"\nGenerator:" \
+        return f"\nMachine:" \
                f"\nBus Number: {self.bus.number}" \
                f"\nBus Name: {self.bus.name}" \
                f"\nId: {self.id}" \

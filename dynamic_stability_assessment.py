@@ -24,6 +24,7 @@ class MainMenu(QMainWindow):
         self.__child = None
         self.show()
 
+
 if __name__ == '__main__':
     app = QApplication([])
     window = MainMenu()
