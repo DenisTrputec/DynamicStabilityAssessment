@@ -16,7 +16,7 @@ class UIModel(QMainWindow):
         self.__model = model
         self.parent = parent
         self.parent.hide()
-        self.show()
+        self.set_window()
 
         self.pb_raw.clicked.connect(self.__browse_raw)
         self.pb_dyr.clicked.connect(self.__browse_dyr)
@@ -46,6 +46,7 @@ class UIModel(QMainWindow):
         self.pte_description.setPlainText(self.__model.description)
         self.le_raw.setText(self.__model.raw_path)
         self.le_dyr.setText(self.__model.dyr_path)
+        self.show()
 
     def closeEvent(self, event):
         print(f"Closing {self.__class__.__name__}")
