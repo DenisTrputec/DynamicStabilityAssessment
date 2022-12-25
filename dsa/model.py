@@ -30,6 +30,15 @@ class Model:
                 text += f"\n\t{scenario.name}"
         return text
 
+    @classmethod
+    def load_from_json(cls, json_string):
+        name = json_string["name"]
+        description = json_string["description"]
+        raw_path = json_string["raw_path"]
+        dyr_path = json_string["raw_path"]
+        instance = Model(name, description, raw_path, dyr_path)
+        return instance
+
 
 if __name__ == '__main__':
     s1 = Scenario("Scene1", "Ispad na necemu")

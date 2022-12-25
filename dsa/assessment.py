@@ -38,7 +38,11 @@ class Assessment:
             assessment_json = json.load(handle)
             name = assessment_json["name"]
             description = assessment_json["description"]
-            instance = Assessment(name, description)
+            models = []
+            for model_json in assessment_json["models"]:
+                model = Model.load_from_json(model_json)
+                models.append(model)
+            instance = Assessment(name, description, models)
             return instance
 
 
