@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QApplication, QMainWindow
+from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt6 import uic
 
 from ui_py.ui_assessment import UIAssessment
@@ -11,7 +11,7 @@ class MainMenu(QMainWindow):
         self.__child = None
 
         self.pb_create_assessment.clicked.connect(self.__create_assessment)
-        self.pb_load_assessment.clicked.connect(self.__edit_assessment)
+        self.pb_edit_assessment.clicked.connect(self.__edit_assessment)
 
     def __create_assessment(self):
         print("Creating New Assessment")
@@ -19,6 +19,8 @@ class MainMenu(QMainWindow):
 
     def __edit_assessment(self):
         print("Loading Assessment")
+        filepath, _ = QFileDialog.getOpenFileName(self, 'Browse', filter='*.json')
+        self.__child = UIAssessment(self, filepath)
 
     def close_child_window(self):
         self.__child = None

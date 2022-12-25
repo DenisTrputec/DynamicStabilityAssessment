@@ -1,3 +1,4 @@
+import os
 import json
 from typing import List
 
@@ -25,9 +26,20 @@ class Assessment:
         return text
 
     def save(self):
+        if not os.path.exists("assessments"):
+            os.makedirs("assessments")
         json_string = json.dumps(self, default=lambda o: o.__dict__, indent=4)
         with open(f"assessments/{self.name}.json", "w") as outfile:
             outfile.write(json_string)
+
+    @classmethod
+    def load_from_json(cls, json_path):
+        with open(json_path, "r") as handle:
+            assessment_json = json.load(handle)
+            name = assessment_json["name"]
+            description = assessment_json["description"]
+            instance = Assessment(name, description)
+            return instance
 
 
 if __name__ == '__main__':
