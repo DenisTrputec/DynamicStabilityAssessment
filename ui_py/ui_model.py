@@ -25,6 +25,13 @@ class UIModel(QMainWindow):
         if self.__model:
             self.__load_model()
 
+    def __load_model(self):
+        print("Loading existing model")
+        self.le_name.setText(self.__model.name)
+        self.pte_description.setPlainText(self.__model.description)
+        self.le_raw.setText(self.__model.raw_path)
+        self.le_dyr.setText(self.__model.dyr_path)
+
     def __browse_raw(self):
         filepath, _ = QFileDialog.getOpenFileName(self, 'Browse', filter='*.raw')
         self.le_raw.setText(filepath)
@@ -47,13 +54,6 @@ class UIModel(QMainWindow):
         else:
             self.parent.add_model(model)
         self.close()
-
-    def __load_model(self):
-        print("Loading existing model")
-        self.le_name.setText(self.__model.name)
-        self.pte_description.setPlainText(self.__model.description)
-        self.le_raw.setText(self.__model.raw_path)
-        self.le_dyr.setText(self.__model.dyr_path)
 
     def closeEvent(self, event):
         print(f"Closing {self.__class__.__name__}")

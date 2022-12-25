@@ -11,13 +11,13 @@ class MainMenu(QMainWindow):
         self.__child = None
 
         self.pb_create_assessment.clicked.connect(self.__create_assessment)
-        self.pb_load_assessment.clicked.connect(self.__load_assessment)
+        self.pb_load_assessment.clicked.connect(self.__edit_assessment)
 
     def __create_assessment(self):
         print("Creating New Assessment")
         self.__child = UIAssessment(self)
 
-    def __load_assessment(self):
+    def __edit_assessment(self):
         print("Loading Assessment")
 
     def close_child_window(self):

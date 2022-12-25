@@ -11,11 +11,13 @@ if TYPE_CHECKING:
 
 
 class UIAssessment(QMainWindow):
-    def __init__(self, parent: "MainMenu"):
+    def __init__(self, parent: "MainMenu", assessment: Assessment = None):
         super().__init__()
         uic.loadUi("ui/assessment.ui", self)
+        self.__assessment = assessment
         self.__child = None
         self.__models = []
+
         self.parent = parent
         self.parent.hide()
         self.show()
@@ -24,6 +26,14 @@ class UIAssessment(QMainWindow):
         self.pb_edit.clicked.connect(self.__edit)
         self.pb_remove.clicked.connect(self.__remove)
         self.pb_save.clicked.connect(self.__save)
+
+        if assessment:
+            self.__load_assessment()
+
+    def __load_assessment(self):
+        print("Loading existing model")
+        self.le_name.setText(self.__assessment.name)
+        self.pte_description.setPlainText(self.__assessment.description)
 
     def __add_new(self):
         print("Adding New Model")
