@@ -4,7 +4,7 @@ from dsa.scenario import Scenario
 
 
 class Model:
-    def __init__(self, name: str, description: str = "", raw_path: str = "", dyr_path: str = "",
+    def __init__(self, name: str = "", description: str = "", raw_path: str = "", dyr_path: str = "",
                  scenarios: List[Scenario] = None):
         self.name = name
         self.description = description

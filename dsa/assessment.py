@@ -6,7 +6,7 @@ from dsa.model import Model
 
 
 class Assessment:
-    def __init__(self, name: str, description: str = "", models: List[Model] = None):
+    def __init__(self, name: str = "", description: str = "", models: List[Model] = None):
         self.name = name
         self.description = description
         self.models = models if models else []

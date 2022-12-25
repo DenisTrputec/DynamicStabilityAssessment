@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt6 import uic
 
+from dsa.assessment import Assessment
 from ui_py.ui_assessment import UIAssessment
 
 
@@ -15,12 +16,14 @@ class MainMenu(QMainWindow):
 
     def __create_assessment(self):
         print("Creating New Assessment")
-        self.__child = UIAssessment(self)
+        assessment = Assessment()
+        self.__child = UIAssessment(self, assessment)
 
     def __edit_assessment(self):
         print("Loading Assessment")
         filepath, _ = QFileDialog.getOpenFileName(self, 'Browse', filter='*.json')
-        self.__child = UIAssessment(self, filepath)
+        assessment = Assessment.load_from_json(filepath)
+        self.__child = UIAssessment(self, assessment)
 
     def close_child_window(self):
         self.__child = None
