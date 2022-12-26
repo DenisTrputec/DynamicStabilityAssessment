@@ -4,6 +4,8 @@ from PyQt6.QtWidgets import QMainWindow, QFileDialog
 from PyQt6 import uic
 
 from dsa.model import Model
+from dsa.scenario import Scenario
+from ui_py.ui_scenario import UIScenario
 
 if TYPE_CHECKING:
     from ui_py.ui_assessment import UIAssessment
@@ -20,6 +22,9 @@ class UIModel(QMainWindow):
 
         self.pb_raw.clicked.connect(self.__browse_raw)
         self.pb_dyr.clicked.connect(self.__browse_dyr)
+        self.pb_add_new.clicked.connect(self.__add_new_scenario)
+        self.pb_edit.clicked.connect(self.__edit_scenario)
+        self.pb_remove.clicked.connect(self.__remove_scenario)
         self.pb_save.clicked.connect(self.__save)
 
     def __browse_raw(self):
@@ -31,6 +36,21 @@ class UIModel(QMainWindow):
         filepath, _ = QFileDialog.getOpenFileName(self, 'Browse', filter='*.dyr')
         self.le_dyr.setText(filepath)
         print("Browsing for DYR")
+
+    def __add_new_scenario(self):
+        print("Adding New Scenario")
+        scenario = Scenario()
+        self.__model.scenarios.append(scenario)
+        self.__child = UIScenario(self, scenario)
+
+    def __edit_scenario(self):
+        print("Editing Model")
+        row_number = self.lw_models.currentRow()
+        if row_number >= 0:
+            self.__child = UIScenario(self, self.__model.scenarios[row_number])
+
+    def __remove_scenario(self):
+        print("Removing Model")
 
     def __save(self):
         print("Saving new Model")

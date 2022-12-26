@@ -4,7 +4,7 @@ from dsa.disturbance import Disturbance
 
 
 class Scenario:
-    def __init__(self, name: str, description: str, actions: List[Union[float, Disturbance]] = None):
+    def __init__(self, name: str = "", description: str = "", actions: List[Union[float, Disturbance]] = None):
         self.name = name
         self.description = description
         self.actions = actions if actions else []

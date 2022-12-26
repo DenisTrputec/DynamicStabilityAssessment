@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>mw_create_model</class>
- <widget class="QMainWindow" name="mw_create_model">
+ <class>mw_scenario</class>
+ <widget class="QMainWindow" name="mw_scenario">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,18 +13,171 @@
   <property name="font">
    <font>
     <family>Times New Roman</family>
-    <pointsize>10</pointsize>
    </font>
   </property>
   <property name="windowTitle">
    <string>Dynamic Stability Assessment</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="lbl_name">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>25</y>
+      <width>101</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string>Name of New Scenario</string>
+    </property>
+    <property name="text">
+     <string>Scenario Name</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_description">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>95</y>
+      <width>101</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string>Description of New Scenario</string>
+    </property>
+    <property name="text">
+     <string>Description</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_actions">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>25</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string>List of Actions used in Scenario</string>
+    </property>
+    <property name="text">
+     <string>Actions</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="lw_disturbances">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>45</y>
+      <width>271</width>
+      <height>401</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pb_edit">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>50</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string>Edit Action from the list of Scenario's actions</string>
+    </property>
+    <property name="text">
+     <string>Edit</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="le_name">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>45</y>
+      <width>271</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pb_remove">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>90</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string>Remove Action from the list of Scenario's actions</string>
+    </property>
+    <property name="text">
+     <string>Remove</string>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="pte_description">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>120</y>
+      <width>271</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string/>
+    </property>
+   </widget>
    <widget class="QPushButton" name="pb_save">
     <property name="geometry">
      <rect>
-      <x>630</x>
-      <y>480</y>
+      <x>620</x>
+      <y>475</y>
       <width>141</width>
       <height>51</height>
      </rect>
@@ -37,17 +190,59 @@
      </font>
     </property>
     <property name="statusTip">
-     <string>Save Model</string>
+     <string>Save Scenario</string>
     </property>
     <property name="text">
      <string>Save</string>
     </property>
    </widget>
-   <widget class="QLabel" name="lbl_name">
+   <widget class="QPushButton" name="pb_simulation">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>30</y>
+      <x>30</x>
+      <y>290</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string/>
+    </property>
+    <property name="text">
+     <string>Simulation</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pb_bus_fault">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>330</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string/>
+    </property>
+    <property name="text">
+     <string>Bus Fault</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_add">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>265</y>
       <width>91</width>
       <height>16</height>
      </rect>
@@ -59,19 +254,103 @@
      </font>
     </property>
     <property name="statusTip">
-     <string>Name of New Model</string>
+     <string>List of Disturbances used in Scenario</string>
     </property>
     <property name="text">
-     <string>Model Name</string>
+     <string>Add</string>
     </property>
    </widget>
-   <widget class="QPlainTextEdit" name="pte_description">
+   <widget class="QPushButton" name="pb_line_fault">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>120</y>
-      <width>271</width>
-      <height>281</height>
+      <x>30</x>
+      <y>370</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string/>
+    </property>
+    <property name="text">
+     <string>Line Fault</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pb_clear_fault">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>410</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string/>
+    </property>
+    <property name="text">
+     <string>Clear Fault</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pb_trip_line">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>290</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string/>
+    </property>
+    <property name="text">
+     <string>Trip Line</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pb_disconnect_bus">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>370</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string/>
+    </property>
+    <property name="text">
+     <string>Disconnect Bus</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pb_disconnect_machine">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>410</y>
+      <width>121</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
@@ -82,44 +361,15 @@
     <property name="statusTip">
      <string/>
     </property>
-   </widget>
-   <widget class="QLabel" name="lbl_description">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>100</y>
-      <width>101</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="statusTip">
-     <string>Description of New Model</string>
-    </property>
     <property name="text">
-     <string>Description</string>
+     <string>Disconnect Machine</string>
     </property>
    </widget>
-   <widget class="QListWidget" name="lw_scenarios">
+   <widget class="QPushButton" name="pb_close_line">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>50</y>
-      <width>271</width>
-      <height>351</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pb_add_new">
-    <property name="geometry">
-     <rect>
-      <x>650</x>
-      <y>50</y>
+      <x>180</x>
+      <y>330</y>
       <width>121</width>
       <height>31</height>
      </rect>
@@ -130,214 +380,10 @@
      </font>
     </property>
     <property name="statusTip">
-     <string>Add new Scenario to the list of Model's scenarios</string>
-    </property>
-    <property name="text">
-     <string>Add New</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="le_name">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>50</y>
-      <width>271</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="statusTip">
      <string/>
     </property>
-   </widget>
-   <widget class="QLabel" name="lbl_scenarios">
-    <property name="geometry">
-     <rect>
-      <x>360</x>
-      <y>30</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="statusTip">
-     <string>List of Scenarios used in Model</string>
-    </property>
     <property name="text">
-     <string>Scenarios</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pb_remove">
-    <property name="geometry">
-     <rect>
-      <x>650</x>
-      <y>150</y>
-      <width>121</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="statusTip">
-     <string>Remove Scenario from the list of Models's scenarios</string>
-    </property>
-    <property name="text">
-     <string>Remove</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="le_raw">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>445</y>
-      <width>431</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="statusTip">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="lbl_raw">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>425</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="statusTip">
-     <string>Absolute filepath to .raw file</string>
-    </property>
-    <property name="text">
-     <string>Raw File</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pb_raw">
-    <property name="geometry">
-     <rect>
-      <x>480</x>
-      <y>440</y>
-      <width>101</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="statusTip">
-     <string>Add new Scenario to the list of Model's scenarios</string>
-    </property>
-    <property name="text">
-     <string>Browse</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="lbl_dyr">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>485</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="statusTip">
-     <string>Absolute filepath to .dyr file</string>
-    </property>
-    <property name="text">
-     <string>Dyr File</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="le_dyr">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>505</y>
-      <width>431</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="statusTip">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pb_dyr">
-    <property name="geometry">
-     <rect>
-      <x>480</x>
-      <y>500</y>
-      <width>101</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="statusTip">
-     <string>Add new Scenario to the list of Model's scenarios</string>
-    </property>
-    <property name="text">
-     <string>Browse</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pb_edit">
-    <property name="geometry">
-     <rect>
-      <x>650</x>
-      <y>100</y>
-      <width>121</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="statusTip">
-     <string>Edit Scenario from the list of Model's scenarios</string>
-    </property>
-    <property name="text">
-     <string>Edit</string>
+     <string>Close Line</string>
     </property>
    </widget>
   </widget>
