@@ -74,6 +74,6 @@ class UIScenario(QMainWindow):
 
     def closeEvent(self, event):
         print(f"Closing {self.__class__.__name__}")
-        # self.parent.update_model_list()
+        self.parent.update_scenario_list()
         self.parent.show()
         event.accept()

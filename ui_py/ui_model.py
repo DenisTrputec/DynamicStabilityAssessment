@@ -56,8 +56,8 @@ class UIModel(QMainWindow):
         print("Saving new Model")
         self.__model.name = self.le_name.text()
         self.__model.description = self.pte_description.toPlainText()
-        self.__model.raw = self.le_raw.text()
-        self.__model.dyr = self.le_dyr.text()
+        self.__model.raw_path = self.le_raw.text()
+        self.__model.dyr_path = self.le_dyr.text()
         self.close()
 
     def set_window(self):
@@ -67,6 +67,11 @@ class UIModel(QMainWindow):
         self.le_raw.setText(self.__model.raw_path)
         self.le_dyr.setText(self.__model.dyr_path)
         self.show()
+
+    def update_scenario_list(self):
+        self.lw_scenarios.clear()
+        for scenario in self.__model.scenarios:
+            self.lw_scenarios.addItem(scenario.name)
 
     def closeEvent(self, event):
         print(f"Closing {self.__class__.__name__}")
