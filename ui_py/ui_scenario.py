@@ -46,7 +46,7 @@ class UIScenario(QMainWindow):
         print("Add Line Fault")
 
     def __clear_fault(self):
-        print("Add Clear Line")
+        print("Add Clear Fault")
 
     def __trip_line(self):
         print("Add Trip Line")
