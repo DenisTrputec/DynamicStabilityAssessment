@@ -2,14 +2,14 @@ import os
 import sys
 import json
 
-import psse_errors
+from dsa import psse_errors
 from power_system.bus import Bus
 from power_system.branch import Branch
 from power_system.machine import Machine
 from power_system.control_center import ControlCenter
 
 
-with open('../config.json') as handle:
+with open('config.json') as handle:
     config = json.load(handle)
     for key in config["psse"]:
         path = config["psse"][key]

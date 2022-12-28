@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import QMainWindow
 from PyQt6 import uic
 
 from dsa.scenario import Scenario
+from dsa.psse import PSSE
 
 if TYPE_CHECKING:
     from ui_py.ui_model import UIModel
@@ -17,6 +18,12 @@ class UIScenario(QMainWindow):
         self.parent = parent
         self.parent.hide()
         self.set_window()
+
+        PSSE.initialize()
+        PSSE.read_raw(self.parent.le_raw.text())
+        self.buses = PSSE.read_busses()
+        self.branches = PSSE.read_branches(self.buses)
+        self.machines = PSSE.read_machines(self.buses)
 
         self.pb_edit.clicked.connect(self.__edit_action)
         self.pb_remove.clicked.connect(self.__remove_action)
