@@ -35,7 +35,7 @@ class Model:
         name = json_string["name"]
         description = json_string["description"]
         raw_path = json_string["raw_path"]
-        dyr_path = json_string["raw_path"]
+        dyr_path = json_string["dyr_path"]
         instance = Model(name, description, raw_path, dyr_path)
         return instance
 
