@@ -1,3 +1,4 @@
+import os
 from typing import TYPE_CHECKING
 
 from PyQt6.QtWidgets import QMainWindow, QFileDialog
@@ -6,6 +7,7 @@ from PyQt6 import uic
 from dsa.model import Model
 from dsa.scenario import Scenario
 from ui_py.ui_scenario import UIScenario
+from ui_py.ui_message import UIMessage
 
 if TYPE_CHECKING:
     from ui_py.ui_assessment import UIAssessment
@@ -18,6 +20,7 @@ class UIModel(QMainWindow):
         self.__model = model
         self.parent = parent
         self.parent.hide()
+        self.message = None
         self.set_window()
 
         self.pb_raw.clicked.connect(self.__browse_raw)
@@ -39,12 +42,16 @@ class UIModel(QMainWindow):
 
     def __add_new_scenario(self):
         print("Adding New Scenario")
+        if not self.__check_raw():
+            return
         scenario = Scenario()
         self.__model.scenarios.append(scenario)
         self.__child = UIScenario(self, scenario)
 
     def __edit_scenario(self):
         print("Editing Model")
+        if not self.__check_raw():
+            return
         row_number = self.lw_models.currentRow()
         if row_number >= 0:
             self.__child = UIScenario(self, self.__model.scenarios[row_number])
@@ -59,6 +66,13 @@ class UIModel(QMainWindow):
         self.__model.raw_path = self.le_raw.text()
         self.__model.dyr_path = self.le_dyr.text()
         self.close()
+
+    def __check_raw(self):
+        if not os.path.exists(self.le_raw.text()):
+            self.message = UIMessage(self, "Warning!", "You need to select raw file!")
+            self.message.show()
+            return False
+        return True
 
     def set_window(self):
         print("Setting Model Window")
