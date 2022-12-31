@@ -17,8 +17,8 @@ class UIModel(QMainWindow):
     def __init__(self, parent: "UIAssessment", model: Model):
         super().__init__()
         uic.loadUi("ui/model.ui", self)
-        self.__model = model
         self.__child = None
+        self.model = model
         self.parent = parent
         self.parent.hide()
         self.message = None
@@ -46,7 +46,7 @@ class UIModel(QMainWindow):
         if not self.__check_raw():
             return
         scenario = Scenario()
-        self.__model.scenarios.append(scenario)
+        self.model.scenarios.append(scenario)
         self.__child = UIScenario(self, scenario)
 
     def __edit_scenario(self):
@@ -55,17 +55,17 @@ class UIModel(QMainWindow):
             return
         row_number = self.lw_models.currentRow()
         if row_number >= 0:
-            self.__child = UIScenario(self, self.__model.scenarios[row_number])
+            self.__child = UIScenario(self, self.model.scenarios[row_number])
 
     def __remove_scenario(self):
         print("Removing Model")
 
     def __save(self):
         print("Saving new Model")
-        self.__model.name = self.le_name.text()
-        self.__model.description = self.pte_description.toPlainText()
-        self.__model.raw_path = self.le_raw.text()
-        self.__model.dyr_path = self.le_dyr.text()
+        self.model.name = self.le_name.text()
+        self.model.description = self.pte_description.toPlainText()
+        self.model.raw_path = self.le_raw.text()
+        self.model.dyr_path = self.le_dyr.text()
         self.close()
 
     def __check_raw(self):
@@ -77,15 +77,15 @@ class UIModel(QMainWindow):
 
     def set_window(self):
         print("Setting Model Window")
-        self.le_name.setText(self.__model.name)
-        self.pte_description.setPlainText(self.__model.description)
-        self.le_raw.setText(self.__model.raw_path)
-        self.le_dyr.setText(self.__model.dyr_path)
+        self.le_name.setText(self.model.name)
+        self.pte_description.setPlainText(self.model.description)
+        self.le_raw.setText(self.model.raw_path)
+        self.le_dyr.setText(self.model.dyr_path)
         self.show()
 
     def update_scenario_list(self):
         self.lw_scenarios.clear()
-        for scenario in self.__model.scenarios:
+        for scenario in self.model.scenarios:
             self.lw_scenarios.addItem(scenario.name)
 
     def closeEvent(self, event):

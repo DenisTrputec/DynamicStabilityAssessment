@@ -29,6 +29,7 @@ class Assessment:
         if not os.path.exists("assessments"):
             os.makedirs("assessments")
         json_string = json.dumps(self, default=lambda o: o.__dict__, indent=4)
+        print(json_string)
         with open(f"assessments/{self.name}.json", "w") as outfile:
             outfile.write(json_string)
 

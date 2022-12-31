@@ -12,6 +12,7 @@ class Scenario:
     def __str__(self):
         return f"Scenario: {self.name}"
 
+    @property
     def info(self):
         text = f"\nScenario:" \
                f"\nName: {self.name}" \
@@ -20,3 +21,14 @@ class Scenario:
         for action in self.actions:
             pass
         return text
+
+    @classmethod
+    def load_from_json(cls, json_string):
+        name = json_string["name"]
+        description = json_string["description"]
+        actions = []
+        # for action_json in json_string["actions"]:
+        #     action = Action.load_from_json(action_json)
+        #     actions.append(action)
+        instance = Scenario(name, description, actions)
+        return instance

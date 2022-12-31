@@ -36,7 +36,12 @@ class Model:
         description = json_string["description"]
         raw_path = json_string["raw_path"]
         dyr_path = json_string["dyr_path"]
-        instance = Model(name, description, raw_path, dyr_path)
+        scenarios = []
+        for scenario_json in json_string["scenarios"]:
+            scenario = Scenario.load_from_json(scenario_json)
+            print(scenario)
+            scenarios.append(scenario)
+        instance = Model(name, description, raw_path, dyr_path, scenarios)
         return instance
 
 

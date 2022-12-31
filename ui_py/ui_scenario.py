@@ -50,6 +50,7 @@ class UIScenario(QMainWindow):
 
     def __bus_fault(self):
         print("Add Bus Fault")
+        self.__child = UIPickElement(self, "Bus Fault", self.buses, PSSE.bus_fault)
 
     def __line_fault(self):
         print("Add Line Fault")
@@ -60,15 +61,19 @@ class UIScenario(QMainWindow):
 
     def __trip_line(self):
         print("Add Trip Line")
+        self.__child = UIPickElement(self, "Trip Line", self.branches, PSSE.line_trip)
 
     def __close_line(self):
         print("Add Close Line")
+        self.__child = UIPickElement(self, "Close Line", self.branches, PSSE.line_close)
 
     def __disconnect_bus(self):
         print("Add Disconnect Bus")
+        self.__child = UIPickElement(self, "Disconnect Bus", self.buses, PSSE.bus_disconnect)
 
     def __disconnect_machine(self):
         print("Add Disconnect Machine")
+        self.__child = UIPickElement(self, "Disconnect Machine", self.machines, PSSE.machine_disconnect)
 
     def __save(self):
         print("Saving new Model")
