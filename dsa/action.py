@@ -6,7 +6,8 @@ from power_system.machine import Machine
 
 
 class Action:
-    def __init__(self, function: Callable, argument: Union[int | float | Bus | Branch | Machine]):
+    def __init__(self, name: str, function: Callable, argument: Union[int, float, Bus, Branch, Machine]):
+        self.name = f"{name}: {argument}"
         self.function = function
         self.argument = argument
 

@@ -5,6 +5,7 @@ from PyQt6 import uic
 
 from dsa.scenario import Scenario
 from dsa.psse import PSSE
+from ui_py.ui_pick_element import UIPickElement
 
 if TYPE_CHECKING:
     from ui_py.ui_model import UIModel
@@ -14,7 +15,8 @@ class UIScenario(QMainWindow):
     def __init__(self, parent: "UIModel", scenario: Scenario):
         super().__init__()
         uic.loadUi("ui/scenario.ui", self)
-        self.__scenario = scenario
+        self.__child = None
+        self.scenario = scenario
         self.parent = parent
         self.parent.hide()
         self.set_window()
@@ -51,6 +53,7 @@ class UIScenario(QMainWindow):
 
     def __line_fault(self):
         print("Add Line Fault")
+        self.__child = UIPickElement(self, "Line Fault", self.branches, PSSE.line_fault)
 
     def __clear_fault(self):
         print("Add Clear Fault")
@@ -69,15 +72,20 @@ class UIScenario(QMainWindow):
 
     def __save(self):
         print("Saving new Model")
-        self.__scenario.name = self.le_name.text()
-        self.__scenario.description = self.pte_description.toPlainText()
+        self.scenario.name = self.le_name.text()
+        self.scenario.description = self.pte_description.toPlainText()
         self.close()
 
     def set_window(self):
         print("Setting Model Window")
-        self.le_name.setText(self.__scenario.name)
-        self.pte_description.setPlainText(self.__scenario.description)
+        self.le_name.setText(self.scenario.name)
+        self.pte_description.setPlainText(self.scenario.description)
         self.show()
+
+    def update_action_list(self):
+        self.lw_actions.clear()
+        for action in self.scenario.actions:
+            self.lw_actions.addItem(action.name)
 
     def closeEvent(self, event):
         print(f"Closing {self.__class__.__name__}")

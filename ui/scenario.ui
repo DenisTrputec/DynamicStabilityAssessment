@@ -85,7 +85,7 @@
      <string>Actions</string>
     </property>
    </widget>
-   <widget class="QListWidget" name="lw_disturbances">
+   <widget class="QListWidget" name="lw_actions">
     <property name="geometry">
      <rect>
       <x>350</x>

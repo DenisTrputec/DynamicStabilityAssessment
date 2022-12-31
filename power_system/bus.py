@@ -10,9 +10,9 @@ class Bus:
         self.cc = control_center
 
     def __str__(self):
-        return f"Bus: {self.number} {self.name}"
+        return f"{self.name}"
 
-    property
+    @property
     def info(self):
         return f"\nBus:" \
                f"\nNumber: {self.number}" \
@@ -20,6 +20,10 @@ class Bus:
                f"\nBase Voltage: {self.base}" \
                f"\nCode Type: {self.type}" \
                f"\nControl Center: {self.cc.name}"
+
+    @property
+    def full_name(self):
+        return f"[{self.number}]{self.name}"
 
 
 if __name__ == '__main__':

@@ -8,7 +8,7 @@ class Machine:
         self.status = status
 
     def __str__(self):
-        return f"Machine: {self.bus.number} {self.bus.name} {self.id}"
+        return f"{self.bus.name}/{self.id}"
 
     def info(self):
         return f"\nMachine:" \
@@ -21,3 +21,7 @@ class Machine:
     @property
     def name(self):
         return f"{self.bus.name}/{self.id}"
+
+    @property
+    def full_name(self):
+        return f"[{self.bus.number}]{self.bus.name}/{self.id}"

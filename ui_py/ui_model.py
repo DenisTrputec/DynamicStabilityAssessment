@@ -18,6 +18,7 @@ class UIModel(QMainWindow):
         super().__init__()
         uic.loadUi("ui/model.ui", self)
         self.__model = model
+        self.__child = None
         self.parent = parent
         self.parent.hide()
         self.message = None
