@@ -17,3 +17,7 @@ class Machine:
                f"\nId: {self.id}" \
                f"\nControl Center: {self.bus.cc.name}" \
                f"\nStatus: {self.status}"
+
+    @property
+    def name(self):
+        return f"{self.bus.name}/{self.id}"

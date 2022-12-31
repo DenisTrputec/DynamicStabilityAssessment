@@ -36,6 +36,26 @@ class PSSE:
             raise Exception(f"PSSE.read_raw: {psse_errors.read[ierr]}")
 
     @staticmethod
+    def __find_bus(bus_list, bus_number1, bus_number2=None):
+        bus1 = None
+        bus2 = None
+        flag1 = False
+        flag2 = True if bus_number2 else False
+
+        for bus in bus_list:
+            if bus.number == bus_number1:
+                bus1 = bus
+            elif bus.number == bus_number2:
+                bus2 = bus
+            if flag1 and flag2:
+                break
+
+        if not bus2:
+            return bus1
+        else:
+            return bus1, bus2
+
+    @staticmethod
     def read_busses():
         _, (numbers, types, areas) = psspy.abusint(string=["NUMBER", "TYPE", "AREA"])
         _, bases = psspy.abusreal(string=["BASE"])
@@ -75,24 +95,44 @@ class PSSE:
         return machine_list
 
     @staticmethod
-    def __find_bus(bus_list, bus_number1, bus_number2=None):
-        bus1 = None
-        bus2 = None
-        flag1 = False
-        flag2 = True if bus_number2 else False
+    def simulation(time: float):
+        print(f"Simulation: {time}s]")
+        # ierr = psspy.run(tpause=time)
 
-        for bus in bus_list:
-            if bus.number == bus_number1:
-                bus1 = bus
-            elif bus.number == bus_number2:
-                bus2 = bus
-            if flag1 and flag2:
-                break
+    @staticmethod
+    def bus_fault(bus: Bus):
+        print(f"Bus Fault: {bus.name}")
+        # ierr = psspy.dist_3phase_bus_fault(ibus=bus.number)
 
-        if not bus2:
-            return bus1
-        else:
-            return bus1, bus2
+    @staticmethod
+    def line_fault(branch: Branch):
+        print(f"Line Fault: {branch.name}")
+        # ierr = psspy.dist_branch_fault(ibus=branch.bus1.number, jbus=branch.bus2.number, id=branch.id)
+
+    @staticmethod
+    def clear_fault(index: int):
+        print(f"Clear Fault: {index}")
+        # ierr = psspy.dist_clear_fault(fault=index)
+
+    @staticmethod
+    def line_trip(branch: Branch):
+        print(f"Line Trip: {branch.name}")
+        # ierr = psspy.dist_branch_trip(ibus=branch.bus1.number, jbus=branch.bus2.number, id=branch.id)
+
+    @staticmethod
+    def line_close(branch: Branch):
+        print(f"Line Close: {branch.name}")
+        # ierr = psspy.dist_branch_close(ibus=branch.bus1.number, jbus=branch.bus2.number, id=branch.id)
+
+    @staticmethod
+    def bus_disconnect(bus: Bus):
+        print(f"Bus Disconnect: {bus.name}")
+        # ierr = psspy.dist_bus_trip(ibus=bus.number)
+
+    @staticmethod
+    def machine_disconnect(machine: Machine):
+        print(f"Machine Disconnect: {machine.bus.name}")
+        # ierr = psspy.dist_bus_trip(ibus=machine.bus.number)
 
 
 if __name__ == '__main__':

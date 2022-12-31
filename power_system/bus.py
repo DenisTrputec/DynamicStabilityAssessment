@@ -12,6 +12,7 @@ class Bus:
     def __str__(self):
         return f"Bus: {self.number} {self.name}"
 
+    property
     def info(self):
         return f"\nBus:" \
                f"\nNumber: {self.number}" \
@@ -23,4 +24,4 @@ class Bus:
 
 if __name__ == '__main__':
     b = Bus(10000, "Zagreb", 400.0, 1, ControlCenter.NDC)
-    print(b.info())
+    print(b.info)

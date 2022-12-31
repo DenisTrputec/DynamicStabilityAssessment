@@ -1,10 +1,10 @@
 from typing import List, Union
 
-from dsa.disturbance import Disturbance
+from dsa.action import Action
 
 
 class Scenario:
-    def __init__(self, name: str = "", description: str = "", actions: List[Union[float, Disturbance]] = None):
+    def __init__(self, name: str = "", description: str = "", actions: List[Union[float, Action]] = None):
         self.name = name
         self.description = description
         self.actions = actions if actions else []

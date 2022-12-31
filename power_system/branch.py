@@ -11,6 +11,7 @@ class Branch:
     def __str__(self):
         return f"Branch: {self.bus1.number} {self.bus2.number} {self.bus1.name} {self.bus2.name} {self.id}"
 
+    @property
     def info(self):
         return f"\nBranch:" \
                f"\nBus 1 Number: {self.bus1.number}" \
@@ -21,3 +22,7 @@ class Branch:
                f"\nControl Center 1: {self.bus1.cc.name}" \
                f"\nControl Center 2: {self.bus2.cc.name}" \
                f"\nStatus: {self.status}"
+
+    @property
+    def name(self):
+        return f"{self.bus1.name}-{self.bus2.name}/{self.id}"
