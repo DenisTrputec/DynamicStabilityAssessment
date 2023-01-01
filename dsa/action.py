@@ -28,9 +28,12 @@ class Action:
 
     @staticmethod
     def __get_argument(argument_json):
-        if "cc" in argument_json:
-            return Bus.load_from_json(argument_json)
-        elif "bus2" in argument_json:
-            return Branch.load_from_json(argument_json)
+        if type(argument_json) is dict:
+            if "cc" in argument_json:
+                return Bus.load_from_json(argument_json)
+            elif "bus2" in argument_json:
+                return Branch.load_from_json(argument_json)
+            else:
+                return Machine.load_from_json(argument_json)
         else:
-            return Machine.load_from_json(argument_json)
+            return argument_json

@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>d_element_picker</class>
- <widget class="QDialog" name="d_element_picker">
-  <property name="windowModality">
-   <enum>Qt::ApplicationModal</enum>
-  </property>
+ <class>d_value_picker</class>
+ <widget class="QDialog" name="d_value_picker">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -57,7 +54,7 @@
     <string>OK</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="cb_elements">
+  <widget class="QLineEdit" name="le_value">
    <property name="geometry">
     <rect>
      <x>10</x>

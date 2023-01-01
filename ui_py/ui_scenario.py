@@ -6,6 +6,7 @@ from PyQt6 import uic
 from dsa.scenario import Scenario
 from dsa.psse import PSSE
 from ui_py.ui_pick_element import UIPickElement
+from ui_py.ui_pick_value import UIPickValue
 
 if TYPE_CHECKING:
     from ui_py.ui_model import UIModel
@@ -47,6 +48,7 @@ class UIScenario(QMainWindow):
 
     def __simulation(self):
         print("Add Perform Simulation")
+        self.__child = UIPickValue(self, "Simulation", "simulation")
 
     def __bus_fault(self):
         print("Add Bus Fault")
