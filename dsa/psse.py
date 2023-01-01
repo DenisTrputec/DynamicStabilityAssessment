@@ -20,9 +20,6 @@ import psspy
 
 
 class PSSE:
-    def __init__(self):
-        pass
-
     @staticmethod
     def initialize(busses=10000):
         ierr = psspy.psseinit(busses)
@@ -133,6 +130,17 @@ class PSSE:
     def machine_disconnect(machine: Machine):
         print(f"Machine Disconnect: {machine.bus.name}")
         # ierr = psspy.dist_bus_trip(ibus=machine.bus.number)
+
+    method = {
+        "simulation": simulation,
+        "bus_fault": bus_fault,
+        "line_fault": line_fault,
+        "clear_fault": clear_fault,
+        "line_trip": line_trip,
+        "line_close": line_close,
+        "bus_disconnect": bus_disconnect,
+        "machine_disconnect": machine_disconnect
+    }
 
 
 if __name__ == '__main__':

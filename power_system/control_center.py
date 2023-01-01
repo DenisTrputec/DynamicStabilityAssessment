@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class ControlCenter(Enum):
+class ControlCenter(IntEnum):
     NDC = 1
     ZAGREB = 2
     RIJEKA = 3

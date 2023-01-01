@@ -13,12 +13,12 @@ if TYPE_CHECKING:
 
 
 class UIPickElement(QDialog):
-    def __init__(self, parent, name: str, elements: List[Union[Bus, Branch, Machine]], function: Callable):
+    def __init__(self, parent, name: str, elements: List[Union[Bus, Branch, Machine]], method_key: str):
         super().__init__()
         uic.loadUi("ui/element_picker.ui", self)
         self.parent = parent
         self.__name = name
-        self.__function = function
+        self.__method_key = method_key
         self.__elements = elements
         self.set_window()
 
@@ -26,7 +26,7 @@ class UIPickElement(QDialog):
 
     def ok_clicked(self):
         element = self.cb_elements.currentData()
-        action = Action(self.__name, self.__function, element)
+        action = Action(self.__name, self.__method_key, element)
         self.parent.scenario.actions.append(action)
         self.close()
 

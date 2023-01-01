@@ -50,10 +50,10 @@ class UIModel(QMainWindow):
         self.__child = UIScenario(self, scenario)
 
     def __edit_scenario(self):
-        print("Editing Model")
+        print("Editing Scenario")
         if not self.__check_raw():
             return
-        row_number = self.lw_models.currentRow()
+        row_number = self.lw_scenarios.currentRow()
         if row_number >= 0:
             self.__child = UIScenario(self, self.model.scenarios[row_number])
 
@@ -81,6 +81,7 @@ class UIModel(QMainWindow):
         self.pte_description.setPlainText(self.model.description)
         self.le_raw.setText(self.model.raw_path)
         self.le_dyr.setText(self.model.dyr_path)
+        self.update_scenario_list()
         self.show()
 
     def update_scenario_list(self):

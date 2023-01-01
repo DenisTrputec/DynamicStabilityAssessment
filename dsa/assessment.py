@@ -26,6 +26,12 @@ class Assessment:
         return text
 
     def save(self):
+        for model in self.models:
+            print("Model:", model)
+            for scenario in model.scenarios:
+                print("Scenario:", scenario)
+                for action in scenario.actions:
+                    print("Action:", action)
         if not os.path.exists("assessments"):
             os.makedirs("assessments")
         json_string = json.dumps(self, default=lambda o: o.__dict__, indent=4)
