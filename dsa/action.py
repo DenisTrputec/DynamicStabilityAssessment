@@ -32,3 +32,5 @@ class Action:
             return Bus.load_from_json(argument_json)
         elif "bus2" in argument_json:
             return Branch.load_from_json(argument_json)
+        else:
+            return Machine.load_from_json(argument_json)

@@ -25,3 +25,11 @@ class Machine:
     @property
     def full_name(self):
         return f"[{self.bus.number}]{self.bus.name}/{self.id}"
+
+    @classmethod
+    def load_from_json(cls, json_string):
+        bus = Bus.load_from_json(json_string["bus"])
+        machine_id = json_string["id"]
+        status = json_string["status"]
+        instance = Machine(bus, machine_id, status)
+        return instance
