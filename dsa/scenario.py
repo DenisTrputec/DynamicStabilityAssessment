@@ -27,8 +27,8 @@ class Scenario:
         name = json_string["name"]
         description = json_string["description"]
         actions = []
-        # for action_json in json_string["actions"]:
-        #     action = Action.load_from_json(action_json)
-        #     actions.append(action)
+        for action_json in json_string["actions"]:
+            action = Action.load_from_json(action_json)
+            actions.append(action)
         instance = Scenario(name, description, actions)
         return instance

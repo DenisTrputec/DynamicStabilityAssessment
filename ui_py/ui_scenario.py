@@ -85,6 +85,7 @@ class UIScenario(QMainWindow):
         print("Setting Model Window")
         self.le_name.setText(self.scenario.name)
         self.pte_description.setPlainText(self.scenario.description)
+        self.update_action_list()
         self.show()
 
     def update_action_list(self):

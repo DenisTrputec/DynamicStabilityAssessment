@@ -30,3 +30,12 @@ class Branch:
     @property
     def full_name(self):
         return f"[{self.bus1.number}]{self.bus1.name}-[{self.bus2.number}]{self.bus2.name}/{self.id}"
+
+    @classmethod
+    def load_from_json(cls, json_string):
+        bus1 = Bus.load_from_json(json_string["bus1"])
+        bus2 = Bus.load_from_json(json_string["bus2"])
+        branch_id = json_string["id"]
+        status = json_string["status"]
+        instance = Branch(bus1, bus2, branch_id, status)
+        return instance
