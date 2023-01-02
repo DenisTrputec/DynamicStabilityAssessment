@@ -30,5 +30,5 @@ class Scenario:
         for action_json in json_string["actions"]:
             action = Action.load_from_json(action_json)
             actions.append(action)
-        instance = Scenario(name, description, actions)
+        instance = cls(name, description, actions)
         return instance

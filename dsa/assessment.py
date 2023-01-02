@@ -49,7 +49,7 @@ class Assessment:
             for model_json in assessment_json["models"]:
                 model = Model.load_from_json(model_json)
                 models.append(model)
-            instance = Assessment(name, description, models)
+            instance = cls(name, description, models)
             return instance
 
 

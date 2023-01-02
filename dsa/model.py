@@ -41,7 +41,7 @@ class Model:
             scenario = Scenario.load_from_json(scenario_json)
             print(scenario)
             scenarios.append(scenario)
-        instance = Model(name, description, raw_path, dyr_path, scenarios)
+        instance = cls(name, description, raw_path, dyr_path, scenarios)
         return instance
 
 

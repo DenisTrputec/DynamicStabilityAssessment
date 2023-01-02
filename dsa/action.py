@@ -22,8 +22,8 @@ class Action:
     def load_from_json(cls, json_string):
         name = json_string["name"].split(':')[0]
         key = json_string["method_key"]
-        argument = Action.__get_argument(json_string["argument"])
-        instance = Action(name, key, argument)
+        argument = cls.__get_argument(json_string["argument"])
+        instance = cls(name, key, argument)
         return instance
 
     @staticmethod
