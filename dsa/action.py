@@ -7,23 +7,28 @@ from dsa.psse import PSSE
 
 
 class Action:
-    def __init__(self, name: str, method_key: str, argument: Union[int, float, Bus, Branch, Machine]):
+    def __init__(self, name: str, method_key: str, argument: Union[int, float, Bus, Branch, Machine], index: int):
         self.name = f"{name}: {argument}"
         self.method_key = method_key
         self.argument = argument
+        self.index = index
 
     def __str__(self):
         return self.name
 
     def activate(self):
-        PSSE.method[self.method_key](self.argument)
+        if self.method_key == "clear_fault":
+            PSSE.method[self.method_key](self.index)
+        else:
+            PSSE.method[self.method_key](self.argument)
 
     @classmethod
     def load_from_json(cls, json_string):
         name = json_string["name"].split(':')[0]
         key = json_string["method_key"]
         argument = cls.__get_argument(json_string["argument"])
-        instance = cls(name, key, argument)
+        index = json_string["index"]
+        instance = cls(name, key, argument, index)
         return instance
 
     @staticmethod

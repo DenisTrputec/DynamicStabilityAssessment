@@ -60,6 +60,11 @@ class UIScenario(QMainWindow):
 
     def __clear_fault(self):
         print("Add Clear Fault")
+        self.clears = [action.argument.name for action in self.scenario.actions if action.method_key == "clear_fault"]
+        self.faults = [action.argument for action in self.scenario.actions
+                       if action.method_key in ["bus_fault", "line_fault"]
+                       and action.argument.name not in self.clears]
+        self.__child = UIPickElement(self, "Clear Fault", self.faults, "clear_fault")
 
     def __trip_line(self):
         print("Add Trip Line")

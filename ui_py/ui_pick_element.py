@@ -26,7 +26,8 @@ class UIPickElement(QDialog):
 
     def ok_clicked(self):
         element = self.cb_elements.currentData()
-        action = Action(self.__name, self.__method_key, element)
+        index = self.cb_elements.currentIndex() + 1
+        action = Action(self.__name, self.__method_key, element, index)
         self.parent.scenario.actions.append(action)
         self.close()
 

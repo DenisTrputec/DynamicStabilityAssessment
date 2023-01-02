@@ -26,7 +26,7 @@ class UIPickValue(QDialog):
     def ok_clicked(self):
         value = self.le_value.text()
         value = float(value)
-        action = Action(self.__name, self.__method_key, value)
+        action = Action(self.__name, self.__method_key, value, 0)
         self.parent.scenario.actions.append(action)
         self.close()
 
