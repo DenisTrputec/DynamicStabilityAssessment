@@ -32,3 +32,9 @@ class Scenario:
             actions.append(action)
         instance = cls(name, description, actions)
         return instance
+
+    def update_clear_faults_index(self):
+        for clear_fault in [x for x in self.actions if x.method_key == "clear_fault"]:
+            for i, fault in enumerate([x for x in self.actions if x.method_key in ["bus_fault", "line_fault"]]):
+                if clear_fault.argument.name == fault.argument.name:
+                    clear_fault.index = i + 1

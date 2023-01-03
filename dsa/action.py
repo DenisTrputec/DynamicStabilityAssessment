@@ -7,7 +7,7 @@ from dsa.psse import PSSE
 
 
 class Action:
-    def __init__(self, name: str, method_key: str, argument: Union[int, float, Bus, Branch, Machine], index: int):
+    def __init__(self, name: str, method_key: str, argument: Union[int, float, Bus, Branch, Machine], index: int = 0):
         self.name = f"{name}: {argument}"
         self.method_key = method_key
         self.argument = argument

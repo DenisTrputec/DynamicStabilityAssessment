@@ -40,11 +40,27 @@ class UIScenario(QMainWindow):
         self.pb_disconnect_machine.clicked.connect(self.__disconnect_machine)
         self.pb_save.clicked.connect(self.__save)
 
+    def __return_corresponding_clear_fault_index(self, index: int):
+        # if bus_fault or line_fault delete also corresponding clear_fault
+        if self.scenario.actions[index].method_key in ["bus_fault", "line_fault"]:
+            fault_name = self.scenario.actions[index].argument.name
+            for clear_index, action in enumerate(self.scenario.actions[index + 1:]):
+                if action.method_key == "clear_fault" and action.argument.name == fault_name:
+                    return index + clear_index + 1
+        return None
+
     def __edit_action(self):
         print("Editing Action")
 
     def __remove_action(self):
         print("Removing Action")
+        action_index = self.lw_actions.currentRow()
+        clear_index = self.__return_corresponding_clear_fault_index(action_index)
+        if clear_index:
+            del self.scenario.actions[clear_index]
+        del self.scenario.actions[action_index]
+        self.scenario.update_clear_faults_index()
+        self.update_action_list()
 
     def __simulation(self):
         print("Add Perform Simulation")
