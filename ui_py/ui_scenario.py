@@ -10,6 +10,7 @@ from ui_py.ui_pick_value import UIPickValue
 
 if TYPE_CHECKING:
     from ui_py.ui_model import UIModel
+    from dsa.action import Action
 
 
 class UIScenario(QMainWindow):
@@ -40,15 +41,6 @@ class UIScenario(QMainWindow):
         self.pb_disconnect_machine.clicked.connect(self.__disconnect_machine)
         self.pb_save.clicked.connect(self.__save)
 
-    def __return_corresponding_clear_fault_index(self, index: int):
-        # if bus_fault or line_fault delete also corresponding clear_fault
-        if self.scenario.actions[index].method_key in ["bus_fault", "line_fault"]:
-            fault_name = self.scenario.actions[index].argument.name
-            for clear_index, action in enumerate(self.scenario.actions[index + 1:]):
-                if action.method_key == "clear_fault" and action.argument.name == fault_name:
-                    return index + clear_index + 1
-        return None
-
     def __edit_action(self):
         print("Editing Action")
         index = self.lw_actions.currentRow()
@@ -59,6 +51,14 @@ class UIScenario(QMainWindow):
             self.__child = UIPickElement(self, "Bus Fault", self.buses, "bus_fault", action)
         elif action.method_key == "line_fault":
             self.__child = UIPickElement(self, "Line Fault", self.branches, "line_fault", action)
+        elif action.method_key == "clear_fault":
+            self.clears = [action.argument.name for action in self.scenario.actions if
+                           action.method_key == "clear_fault"]
+            self.faults = [action.argument for action in self.scenario.actions[:index]
+                           if action.method_key in ["bus_fault", "line_fault"]
+                           and action.argument.name not in self.clears]
+            self.faults = [action.argument] + self.faults
+            self.__child = UIPickElement(self, "Clear Fault", self.faults, "clear_fault", action)
         self.update_action_list()
 
     def __remove_action(self):
@@ -68,7 +68,7 @@ class UIScenario(QMainWindow):
         if clear_index:
             del self.scenario.actions[clear_index]
         del self.scenario.actions[action_index]
-        self.scenario.update_clear_faults_index()
+        self.scenario.update_clear_faults_indexes()
         self.update_action_list()
 
     def __simulation(self):
@@ -77,7 +77,7 @@ class UIScenario(QMainWindow):
 
     def __bus_fault(self):
         print("Add Bus Fault")
-        self.__child = UIPickElement(self, "Bus Fault", self.buses, "bus_fault")
+        self.__child = UIPickElement(self, "Bus Fault", self.available_buses(), "bus_fault")
 
     def __line_fault(self):
         print("Add Line Fault")
@@ -113,6 +113,19 @@ class UIScenario(QMainWindow):
         self.scenario.description = self.pte_description.toPlainText()
         self.close()
 
+    def __return_corresponding_clear_fault_index(self, index: int):
+        # if bus_fault or line_fault delete also corresponding clear_fault
+        if self.scenario.actions[index].method_key in ["bus_fault", "line_fault"]:
+            fault_name = self.scenario.actions[index].argument.name
+            for clear_index, action in enumerate(self.scenario.actions[index + 1:]):
+                if action.method_key == "clear_fault" and action.argument.name == fault_name:
+                    return index + clear_index + 1
+        return None
+
+    def available_buses(self):
+        used = [action.argument.name for action in self.scenario.actions if action.method_key == "bus_fault"]
+        return [b for b in self.buses if b.name not in used]
+
     def set_window(self):
         print("Setting Model Window")
         self.le_name.setText(self.scenario.name)
@@ -121,6 +134,7 @@ class UIScenario(QMainWindow):
         self.show()
 
     def update_action_list(self):
+        print("Updating Action List")
         self.lw_actions.clear()
         for action in self.scenario.actions:
             self.lw_actions.addItem(action.name)
