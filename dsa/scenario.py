@@ -39,14 +39,10 @@ class Scenario:
                 if clear_fault.argument.name == fault.argument.name:
                     clear_fault.index = i + 1
 
-    def update_clear_fault(self, updated_fault: Action):
+    def update_corresponding_clear_fault(self, updated_fault: Action):
         for fault_index, fault in enumerate([x for x in self.actions if x.method_key in ["bus_fault", "line_fault"]]):
-            print(1, fault)
             if updated_fault.argument.name == fault.argument.name:
-                print(2)
                 for clear_fault in [x for x in self.actions if x.method_key == "clear_fault"]:
-                    print(3, clear_fault)
                     if clear_fault.index - 1 == fault_index:
-                        print(4, clear_fault.index)
                         clear_fault.argument = updated_fault.argument
                         clear_fault.update_name()

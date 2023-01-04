@@ -57,6 +57,8 @@ class UIScenario(QMainWindow):
             self.__child = UIPickValue(self, "Simulation", "simulation", action)
         elif action.method_key == "bus_fault":
             self.__child = UIPickElement(self, "Bus Fault", self.buses, "bus_fault", action)
+        elif action.method_key == "line_fault":
+            self.__child = UIPickElement(self, "Line Fault", self.branches, "line_fault", action)
         self.update_action_list()
 
     def __remove_action(self):
