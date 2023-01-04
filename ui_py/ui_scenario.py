@@ -52,6 +52,7 @@ class UIScenario(QMainWindow):
     def __edit_action(self):
         print("Editing Action")
 
+
     def __remove_action(self):
         print("Removing Action")
         action_index = self.lw_actions.currentRow()

@@ -9,11 +9,11 @@ from power_system.machine import Machine
 from dsa.action import Action
 
 if TYPE_CHECKING:
-    from ui_py.ui_model import UIModel
+    from ui_py.ui_scenario import UIScenario
 
 
 class UIPickElement(QDialog):
-    def __init__(self, parent, name: str, elements: List[Union[Bus, Branch, Machine]], method_key: str):
+    def __init__(self, parent: "UIScenario", name: str, elements: List[Union[Bus, Branch, Machine]], method_key: str):
         super().__init__()
         uic.loadUi("ui/element_picker.ui", self)
         self.parent = parent

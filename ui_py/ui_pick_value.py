@@ -9,11 +9,11 @@ from power_system.machine import Machine
 from dsa.action import Action
 
 if TYPE_CHECKING:
-    from ui_py.ui_model import UIModel
+    from ui_py.ui_scenario import UIScenario
 
 
 class UIPickValue(QDialog):
-    def __init__(self, parent, name: str, method_key: str):
+    def __init__(self, parent: "UIScenario", name: str, method_key: str):
         super().__init__()
         uic.loadUi("ui/value_picker.ui", self)
         self.parent = parent
@@ -26,7 +26,7 @@ class UIPickValue(QDialog):
     def ok_clicked(self):
         value = self.le_value.text()
         value = float(value)
-        action = Action(self.__name, self.__method_key, value, 0)
+        action = Action(self.__name, self.__method_key, value)
         self.parent.scenario.actions.append(action)
         self.close()
 
