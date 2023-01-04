@@ -51,7 +51,11 @@ class UIScenario(QMainWindow):
 
     def __edit_action(self):
         print("Editing Action")
-
+        index = self.lw_actions.currentRow()
+        action = self.scenario.actions[index]
+        if action.method_key == "simulation":
+            self.__child = UIPickValue(self, "Simulation", "simulation", action)
+        self.update_action_list()
 
     def __remove_action(self):
         print("Removing Action")

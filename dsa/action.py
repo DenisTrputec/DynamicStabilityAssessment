@@ -22,6 +22,9 @@ class Action:
         else:
             PSSE.method[self.method_key](self.argument)
 
+    def update_name(self):
+        self.name = f"{self.name.split(':')[0]}: {self.argument}"
+
     @classmethod
     def load_from_json(cls, json_string):
         name = json_string["name"].split(':')[0]
