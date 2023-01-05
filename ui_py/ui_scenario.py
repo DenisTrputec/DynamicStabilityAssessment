@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List, Union
 
 from PyQt6.QtWidgets import QMainWindow
 from PyQt6 import uic
@@ -10,7 +10,9 @@ from ui_py.ui_pick_value import UIPickValue
 
 if TYPE_CHECKING:
     from ui_py.ui_model import UIModel
-    from dsa.action import Action
+    from power_system.bus import Bus
+    from power_system.branch import Branch
+    from power_system.machine import Machine
 
 
 class UIScenario(QMainWindow):
@@ -77,11 +79,13 @@ class UIScenario(QMainWindow):
 
     def __bus_fault(self):
         print("Add Bus Fault")
-        self.__child = UIPickElement(self, "Bus Fault", self.available_buses(), "bus_fault")
+        buses = self.available_elements(self.buses, "bus_fault")
+        self.__child = UIPickElement(self, "Bus Fault", buses, "bus_fault")
 
     def __line_fault(self):
         print("Add Line Fault")
-        self.__child = UIPickElement(self, "Line Fault", self.branches, "line_fault")
+        branches = self.available_elements(self.branches, "line_fault")
+        self.__child = UIPickElement(self, "Line Fault", branches, "line_fault")
 
     def __clear_fault(self):
         print("Add Clear Fault")
@@ -93,19 +97,23 @@ class UIScenario(QMainWindow):
 
     def __trip_line(self):
         print("Add Trip Line")
-        self.__child = UIPickElement(self, "Trip Line", self.branches, "line_trip")
+        branches = self.available_elements(self.branches, "line_trip")
+        self.__child = UIPickElement(self, "Trip Line", branches, "line_trip")
 
     def __close_line(self):
         print("Add Close Line")
-        self.__child = UIPickElement(self, "Close Line", self.branches, "line_close")
+        branches = self.available_elements(self.branches, "line_close")
+        self.__child = UIPickElement(self, "Close Line", branches, "line_close")
 
     def __disconnect_bus(self):
         print("Add Disconnect Bus")
-        self.__child = UIPickElement(self, "Disconnect Bus", self.buses, "bus_disconnect")
+        buses = self.available_elements(self.buses, "bus_disconnect")
+        self.__child = UIPickElement(self, "Disconnect Bus", buses, "bus_disconnect")
 
     def __disconnect_machine(self):
         print("Add Disconnect Machine")
-        self.__child = UIPickElement(self, "Disconnect Machine", self.machines, "machine_disconnect")
+        machines = self.available_elements(self.machines, "machine_disconnect")
+        self.__child = UIPickElement(self, "Disconnect Machine", machines, "machine_disconnect")
 
     def __save(self):
         print("Saving new Model")
@@ -122,9 +130,9 @@ class UIScenario(QMainWindow):
                     return index + clear_index + 1
         return None
 
-    def available_buses(self):
-        used = [action.argument.name for action in self.scenario.actions if action.method_key == "bus_fault"]
-        return [b for b in self.buses if b.name not in used]
+    def available_elements(self, elements: List[Union["Bus", "Branch", "Machine"]], method_string: str):
+        used = [action.argument.name for action in self.scenario.actions if action.method_key == method_string]
+        return [b for b in elements if b.name not in used]
 
     def set_window(self):
         print("Setting Model Window")
