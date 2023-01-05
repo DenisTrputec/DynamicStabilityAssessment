@@ -59,6 +59,9 @@ class UIModel(QMainWindow):
 
     def __remove_scenario(self):
         print("Removing Model")
+        scenario_index = self.lw_scenarios.currentRow()
+        del self.model.scenarios[scenario_index]
+        self.update_scenario_list()
 
     def __save(self):
         print("Saving new Model")

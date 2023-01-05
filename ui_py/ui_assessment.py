@@ -42,6 +42,9 @@ class UIAssessment(QMainWindow):
 
     def __remove_model(self):
         print("Removing Model")
+        model_index = self.lw_models.currentRow()
+        del self.__assessment.models[model_index]
+        self.update_model_list()
 
     def __save(self):
         print(f"Saving... {self.__assessment}")
