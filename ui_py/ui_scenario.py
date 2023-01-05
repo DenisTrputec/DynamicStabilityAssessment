@@ -50,9 +50,11 @@ class UIScenario(QMainWindow):
         if action.method_key == "simulation":
             self.__child = UIPickValue(self, "Simulation", "simulation", action)
         elif action.method_key == "bus_fault":
-            self.__child = UIPickElement(self, "Bus Fault", self.buses, "bus_fault", action)
+            buses = [action.argument] + self.available_elements(self.buses, "bus_fault")
+            self.__child = UIPickElement(self, "Bus Fault", buses, "bus_fault", action)
         elif action.method_key == "line_fault":
-            self.__child = UIPickElement(self, "Line Fault", self.branches, "line_fault", action)
+            branches = [action.argument] + self.available_elements(self.branches, "line_fault")
+            self.__child = UIPickElement(self, "Line Fault", branches, "line_fault", action)
         elif action.method_key == "clear_fault":
             self.clears = [action.argument.name for action in self.scenario.actions if
                            action.method_key == "clear_fault"]
