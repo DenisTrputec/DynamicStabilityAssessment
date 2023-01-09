@@ -35,10 +35,15 @@ class Scenario:
 
     def update_clear_faults_indexes(self):
         print("Updating Clear Faults Indexes")
+        cleared = []
         for clear_fault in [x for x in self.actions if x.method_key == "clear_fault"]:
-            for i, fault in enumerate([x for x in self.actions if x.method_key in ["bus_fault", "line_fault"]]):
+            i = 1
+            for fault in [x for x in self.actions if x.method_key in ["bus_fault", "line_fault"]]:
                 if clear_fault.argument.name == fault.argument.name:
-                    clear_fault.index = i + 1
+                    cleared.append(fault)
+                    clear_fault.index = i
+                elif fault not in cleared:
+                    i += 1
 
     def update_corresponding_clear_fault(self, updated_fault: Action):
         print("Updating Corresponding Clear Fault")

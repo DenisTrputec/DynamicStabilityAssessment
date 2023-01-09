@@ -35,7 +35,7 @@ class UIPickElement(QDialog):
         else:
             action = Action(self.__name, self.__method_key, element)
             self.parent.scenario.actions.append(action)
-            self.parent.scenario.update_clear_faults_indexes()
+        self.parent.scenario.update_clear_faults_indexes()
         self.close()
 
     def set_window(self):
