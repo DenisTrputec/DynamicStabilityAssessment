@@ -33,6 +33,8 @@ class UIScenario(QMainWindow):
 
         self.pb_edit.clicked.connect(self.__edit_action)
         self.pb_remove.clicked.connect(self.__remove_action)
+        self.pb_move_up.clicked.connect(self.__move_up)
+        self.pb_move_down.clicked.connect(self.__move_down)
         self.pb_simulation.clicked.connect(self.__simulation)
         self.pb_bus_fault.clicked.connect(self.__bus_fault)
         self.pb_line_fault.clicked.connect(self.__line_fault)
@@ -72,6 +74,22 @@ class UIScenario(QMainWindow):
         if clear_index:
             del self.scenario.actions[clear_index]
         del self.scenario.actions[action_index]
+        self.scenario.update_clear_faults_indexes()
+        self.update_action_list()
+
+    def __move_up(self):
+        i = self.lw_actions.currentRow()
+        if i > 0:
+            self.scenario.actions[i - 1], self.scenario.actions[i] = \
+                self.scenario.actions[i], self.scenario.actions[i - 1]
+        self.scenario.update_clear_faults_indexes()
+        self.update_action_list()
+
+    def __move_down(self):
+        i = self.lw_actions.currentRow()
+        if i + 1 < len(self.scenario.actions):
+            self.scenario.actions[i], self.scenario.actions[i + 1] = \
+                self.scenario.actions[i + 1], self.scenario.actions[i]
         self.scenario.update_clear_faults_indexes()
         self.update_action_list()
 
