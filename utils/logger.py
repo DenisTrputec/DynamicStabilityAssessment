@@ -10,7 +10,7 @@ class Logger(logging.Logger):
         super().__init__(name, level)
 
         # Create formatter
-        formatter = logging.Formatter('%(asctime)s ; %(levelname)s ; %(filename)s ; %(message)s')
+        formatter = logging.Formatter("%(asctime)s ; %(levelname)s ; %(module)s.%(funcName)s() ; %(message)s")
 
         # Create console handler
         console_handler = logging.StreamHandler()
@@ -36,4 +36,4 @@ class Logger(logging.Logger):
         return errors
 
 
-logger = Logger("Limit Check Logger", filepath=join("logs", f"{date.today():%Y%m%d}.log"))
+logger = Logger("Limit Check Logger", filepath=join("logs", "dsa.log"))

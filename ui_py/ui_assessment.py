@@ -6,6 +6,7 @@ from PyQt6 import uic
 from dsa.assessment import Assessment
 from dsa.model import Model
 from ui_py.ui_model import UIModel
+from utils.logger import logger
 
 if TYPE_CHECKING:
     from dynamic_stability_assessment import MainMenu
@@ -29,7 +30,7 @@ class UIAssessment(QMainWindow):
         self.pb_save.clicked.connect(self.__save)
 
     def __add_new_model(self):
-        print("Adding New Model")
+        logger.info("Adding New Model")
         model = Model()
         self.__assessment.models.append(model)
         self.__child = UIModel(self, model)

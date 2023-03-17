@@ -29,6 +29,7 @@ class Assessment:
         return text
 
     def save(self, filepath=None):
+        logger.info(f"Saving assessment '{self.name}'")
         filepath = filepath or join("assessments", f"{self.name}.json")
         SystemManager.create_folder(dirname(filepath))
         json_dump = json.dumps(self, default=lambda o: o.__dict__, indent=4)
@@ -38,6 +39,7 @@ class Assessment:
 
     @classmethod
     def load_from_json(cls, json_path):
+        logger.info(f"Loading assessment '{json_path}'")
         with open(json_path, "r") as handle:
             assessment_json = json.load(handle)
             name = assessment_json["name"]

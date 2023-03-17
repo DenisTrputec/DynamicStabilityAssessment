@@ -3,3 +3,4 @@ venv
 input_files
 assessments
 *__pycache__*
+logs
