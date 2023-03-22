@@ -34,13 +34,15 @@ class UIModel(QMainWindow):
 
     def __browse_raw(self):
         logger.info("")
+        old_path = self.le_raw.text()
         filepath, _ = QFileDialog.getOpenFileName(self, 'Browse', filter='*.raw')
-        self.le_raw.setText(filepath)
+        self.le_raw.setText(filepath or old_path)
 
     def __browse_dyr(self):
         logger.info("")
+        old_path = self.le_dyr.text()
         filepath, _ = QFileDialog.getOpenFileName(self, 'Browse', filter='*.dyr')
-        self.le_dyr.setText(filepath)
+        self.le_dyr.setText(filepath or old_path)
 
     def __add_new_scenario(self):
         logger.info("")

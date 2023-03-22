@@ -126,7 +126,7 @@ class UIScenario(QMainWindow):
 
     def __close_line(self):
         logger.info("")
-        branches = self.available_elements(self.branches, "line_close")
+        branches = self.available_elements({k: v for k, v in self.branches.items() if v.status != 1}, "line_close")
         self.__child = UIPickElement(self, "Close Line", branches, "line_close")
 
     def __disconnect_bus(self):

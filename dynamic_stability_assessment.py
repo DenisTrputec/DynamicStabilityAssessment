@@ -1,3 +1,5 @@
+from os.path import exists
+
 from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt6 import uic
 
@@ -23,6 +25,8 @@ class MainMenu(QMainWindow):
     def __edit_assessment(self):
         logger.info("")
         filepath, _ = QFileDialog.getOpenFileName(self, 'Browse', filter='*.json')
+        if not exists(filepath):
+            return
         assessment = Assessment.load_from_json(filepath)
         self.__child = UIAssessment(self, assessment)
 

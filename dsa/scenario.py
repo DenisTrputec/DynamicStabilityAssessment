@@ -17,10 +17,11 @@ class Scenario:
     def info(self):
         text = f"\nScenario:" \
                f"\nName: {self.name}" \
-               f"\nDescription: {self.description}" \
-               f"\nActions:"
-        for action in self.actions:
-            pass
+               f"\nDescription: {self.description}"
+        if self.actions:
+            text += f"\nActions:"
+            for action in self.actions:
+                text += f"\n\t{action.name}"
         return text
 
     @classmethod
