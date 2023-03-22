@@ -14,6 +14,7 @@ if TYPE_CHECKING:
 
 class UIAssessment(QMainWindow):
     def __init__(self, parent: "MainMenu", assessment: Assessment):
+        logger.info("")
         super().__init__()
         uic.loadUi("ui/assessment.ui", self)
         self.__child = None
@@ -30,55 +31,56 @@ class UIAssessment(QMainWindow):
         self.pb_save.clicked.connect(self.__save)
 
     def __add_new_model(self):
-        logger.info("Adding New Model")
+        logger.info("")
         model = Model()
         self.__assessment.models.append(model)
         self.__child = UIModel(self, model)
 
     def __edit_model(self):
-        print("Editing Model")
+        logger.info("")
         row_number = self.lw_models.currentRow()
         if row_number >= 0:
             self.__child = UIModel(self, self.__assessment.models[row_number])
 
     def __remove_model(self):
-        print("Removing Model")
+        logger.info("")
         model_index = self.lw_models.currentRow()
         del self.__assessment.models[model_index]
         self.update_model_list()
 
     def __save(self):
-        print(f"Saving... {self.__assessment}")
+        logger.info("")
         self.__assessment.name = self.le_name.text()
         self.__assessment.description = self.pte_description.toPlainText()
         self.__assessment.save()
         self.close()
 
     def set_window(self):
-        print("Setting Assessment Window")
+        logger.info("")
         self.le_name.setText(self.__assessment.name)
         self.pte_description.setPlainText(self.__assessment.description)
         self.update_model_list()
         self.show()
 
     def update_model_list(self):
+        logger.info("")
         self.lw_models.clear()
         for model in self.__assessment.models:
             self.lw_models.addItem(model.name)
 
     def add_model(self, model):
-        print("Adding model to list")
+        logger.info("")
         self.__assessment.models.append(model)
         self.lw_models.addItem(model.name)
 
     def update_model(self, model):
-        print("Updating model in list")
+        logger.info("")
         row_number = self.lw_models.currentRow()
         self.__assessment.models[row_number] = model
         self.lw_models.takeItem(row_number)
         self.lw_models.insertItem(row_number, model.name)
 
     def closeEvent(self, event):
-        print(f"Closing {self.__class__.__name__}")
+        logger.info(f"")
         self.parent.close_child_window()
         event.accept()

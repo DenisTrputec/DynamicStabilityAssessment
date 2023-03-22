@@ -7,3 +7,8 @@ class ControlCenter(IntEnum):
     RIJEKA = 3
     SPLIT = 4
     OSIJEK = 5
+    UNKNOWN = 6
+
+    @classmethod
+    def _missing_(cls, value):
+        return cls.UNKNOWN

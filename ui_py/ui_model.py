@@ -8,6 +8,7 @@ from dsa.model import Model
 from dsa.scenario import Scenario
 from ui_py.ui_scenario import UIScenario
 from ui_py.ui_message import UIMessage
+from utils.logger import logger
 
 if TYPE_CHECKING:
     from ui_py.ui_assessment import UIAssessment
@@ -15,12 +16,12 @@ if TYPE_CHECKING:
 
 class UIModel(QMainWindow):
     def __init__(self, parent: "UIAssessment", model: Model):
+        logger.info("")
         super().__init__()
         uic.loadUi("ui/model.ui", self)
         self.__child = None
         self.model = model
         self.parent = parent
-        self.parent.hide()
         self.message = None
         self.set_window()
 
@@ -32,17 +33,17 @@ class UIModel(QMainWindow):
         self.pb_save.clicked.connect(self.__save)
 
     def __browse_raw(self):
+        logger.info("")
         filepath, _ = QFileDialog.getOpenFileName(self, 'Browse', filter='*.raw')
         self.le_raw.setText(filepath)
-        print("Browsing for RAW")
 
     def __browse_dyr(self):
+        logger.info("")
         filepath, _ = QFileDialog.getOpenFileName(self, 'Browse', filter='*.dyr')
         self.le_dyr.setText(filepath)
-        print("Browsing for DYR")
 
     def __add_new_scenario(self):
-        print("Adding New Scenario")
+        logger.info("")
         if not self.__check_raw():
             return
         scenario = Scenario()
@@ -50,21 +51,21 @@ class UIModel(QMainWindow):
         self.__child = UIScenario(self, scenario)
 
     def __edit_scenario(self):
-        print("Editing Scenario")
+        logger.info("")
         if not self.__check_raw():
             return
-        row_number = self.lw_scenarios.currentRow()
-        if row_number >= 0:
-            self.__child = UIScenario(self, self.model.scenarios[row_number])
+        scenario_index = self.lw_scenarios.currentRow()
+        if scenario_index >= 0:
+            self.__child = UIScenario(self, self.model.scenarios[scenario_index])
 
     def __remove_scenario(self):
-        print("Removing Model")
+        logger.info("")
         scenario_index = self.lw_scenarios.currentRow()
         del self.model.scenarios[scenario_index]
         self.update_scenario_list()
 
     def __save(self):
-        print("Saving new Model")
+        logger.info("")
         self.model.name = self.le_name.text()
         self.model.description = self.pte_description.toPlainText()
         self.model.raw_path = self.le_raw.text()
@@ -72,6 +73,7 @@ class UIModel(QMainWindow):
         self.close()
 
     def __check_raw(self):
+        logger.info("")
         if not os.path.exists(self.le_raw.text()):
             self.message = UIMessage(self, "Warning!", "You need to select raw file!")
             self.message.show()
@@ -79,7 +81,8 @@ class UIModel(QMainWindow):
         return True
 
     def set_window(self):
-        print("Setting Model Window")
+        logger.info("")
+        self.parent.hide()
         self.le_name.setText(self.model.name)
         self.pte_description.setPlainText(self.model.description)
         self.le_raw.setText(self.model.raw_path)
@@ -88,12 +91,13 @@ class UIModel(QMainWindow):
         self.show()
 
     def update_scenario_list(self):
+        logger.info("")
         self.lw_scenarios.clear()
         for scenario in self.model.scenarios:
             self.lw_scenarios.addItem(scenario.name)
 
     def closeEvent(self, event):
-        print(f"Closing {self.__class__.__name__}")
+        logger.info("")
         self.parent.update_model_list()
         self.parent.show()
         event.accept()

@@ -21,7 +21,7 @@ import psspy
 
 class PSSE:
     @staticmethod
-    def initialize(busses=10000):
+    def initialize(busses=50000):
         ierr = psspy.psseinit(busses)
         if ierr != 0:
             raise Exception(f"Couldn't initialize PSSE\tError Code:{ierr}")
@@ -57,7 +57,6 @@ class PSSE:
         _, (numbers, types, areas) = psspy.abusint(string=["NUMBER", "TYPE", "AREA"])
         _, bases = psspy.abusreal(string=["BASE"])
         _, names = psspy.abuschar(string=["NAME"])
-
         bus_list = []
         for number, bus_type, cc_number, base_voltage, name in zip(numbers, types, areas, bases[0], names[0]):
             bus_list.append(Bus(number, name, base_voltage, bus_type, ControlCenter(cc_number)))

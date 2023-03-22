@@ -1,6 +1,7 @@
 from typing import List, Union
 
 from dsa.action import Action
+from utils.logger import logger
 
 
 class Scenario:
@@ -24,6 +25,7 @@ class Scenario:
 
     @classmethod
     def load_from_json(cls, json_string):
+        logger.info(f"Loading scenario...")
         name = json_string["name"]
         description = json_string["description"]
         actions = []
@@ -31,10 +33,11 @@ class Scenario:
             action = Action.load_from_json(action_json)
             actions.append(action)
         instance = cls(name, description, actions)
+        logger.info(f"Scenario '{name}' loaded successfully")
         return instance
 
     def update_clear_faults_indexes(self):
-        print("Updating Clear Faults Indexes")
+        logger.info("Updating Clear Faults Indexes")
         cleared = []
         for clear_fault in [x for x in self.actions if x.method_key == "clear_fault"]:
             i = 1
@@ -46,7 +49,7 @@ class Scenario:
                     i += 1
 
     def update_corresponding_clear_fault(self, updated_fault: Action):
-        print("Updating Corresponding Clear Fault")
+        logger.info("Updating Corresponding Clear Fault")
         for fault_index, fault in enumerate([x for x in self.actions if x.method_key in ["bus_fault", "line_fault"]]):
             if updated_fault.argument.name == fault.argument.name:
                 for clear_fault in [x for x in self.actions if x.method_key == "clear_fault"]:
