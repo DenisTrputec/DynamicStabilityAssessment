@@ -57,38 +57,36 @@ class PSSE:
         _, (numbers, types, areas) = psspy.abusint(string=["NUMBER", "TYPE", "AREA"])
         _, bases = psspy.abusreal(string=["BASE"])
         _, names = psspy.abuschar(string=["NAME"])
-        bus_list = []
+        bus_dict = {}
         for number, bus_type, cc_number, base_voltage, name in zip(numbers, types, areas, bases[0], names[0]):
-            bus_list.append(Bus(number, name, base_voltage, bus_type, ControlCenter(cc_number)))
-        return bus_list
+            bus_dict[number] = Bus(number, name, base_voltage, bus_type, ControlCenter(cc_number))
+        return bus_dict
 
     @staticmethod
-    def read_branches(bus_list=None):
-        if not bus_list:
-            bus_list = PSSE.read_busses()
+    def read_branches(bus_dict=None):
+        if not bus_dict:
+            bus_dict = PSSE.read_busses()
 
         _, (from_numbers, to_numbers, statuses) = psspy.abrnint(string=["FROMNUMBER", "TONUMBER", "STATUS"])
         _, branch_ids = psspy.abrnchar(string=["ID"])
 
-        branch_list = []
+        branch_dict = {}
         for b1, b2, statuses, branch_id in zip(from_numbers, to_numbers, statuses, branch_ids[0]):
-            bus1, bus2 = PSSE.__find_bus(bus_list, b1, b2)
-            branch_list.append(Branch(bus1, bus2, branch_id, statuses))
-        return branch_list
+            branch_dict[(b1, b2, branch_id)] = Branch(bus_dict[b1], bus_dict[b2], branch_id, statuses)
+        return branch_dict
 
     @staticmethod
-    def read_machines(bus_list=None):
-        if not bus_list:
-            bus_list = PSSE.read_busses()
+    def read_machines(bus_dict=None):
+        if not bus_dict:
+            bus_dict = PSSE.read_busses()
 
         _, (bus_numbers, statuses) = psspy.amachint(string=["NUMBER", "STATUS"])
         _, machine_ids = psspy.amachchar(string=["ID"])
 
-        machine_list = []
+        machine_dict = {}
         for number, status, machine_id in zip(bus_numbers, statuses, machine_ids[0]):
-            bus = PSSE.__find_bus(bus_list, number)
-            machine_list.append(Machine(bus, machine_id, status))
-        return machine_list
+            machine_dict[(number, machine_id)] = Machine(bus_dict[number], machine_id, status)
+        return machine_dict
 
     @staticmethod
     def simulation(time: float):

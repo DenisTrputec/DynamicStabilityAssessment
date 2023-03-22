@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List, Union
+from typing import TYPE_CHECKING, List, Union, Dict
 
 from PyQt6.QtWidgets import QMainWindow
 from PyQt6 import uic
@@ -155,10 +155,11 @@ class UIScenario(QMainWindow):
                     return index + clear_index + 1
         return None
 
-    def available_elements(self, elements: List[Union["Bus", "Branch", "Machine"]], method_string: str):
+    def available_elements(self, elements: Dict[Union[int, tuple], Union["Bus", "Branch", "Machine"]],
+                           method_string: str):
         logger.info("")
         used = [action.argument.name for action in self.scenario.actions if action.method_key == method_string]
-        return [b for b in elements if b.name not in used]
+        return [e for e in elements.values() if e.name not in used]
 
     def set_window(self):
         logger.info("")
