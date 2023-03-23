@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Callable, List, Union
+from typing import TYPE_CHECKING, List, Union
 
 from PyQt6.QtWidgets import QDialog
 from PyQt6 import uic
@@ -28,6 +28,8 @@ class UIPickElement(QDialog):
 
     def ok_clicked(self):
         element = self.cb_elements.currentData()
+        if not element:
+            self.close()
         if self.__action:
             self.__action.argument = element
             self.__action.update_name()

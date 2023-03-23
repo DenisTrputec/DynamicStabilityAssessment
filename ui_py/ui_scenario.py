@@ -29,9 +29,9 @@ class UIScenario(QMainWindow):
 
         PSSE.initialize()
         PSSE.read_raw(self.parent.le_raw.text())
-        self.buses = PSSE.read_busses()
-        self.branches = PSSE.read_branches(self.buses)
-        self.machines = PSSE.read_machines(self.buses)
+        self.buses = PSSE.read_bus_data()
+        self.branches = PSSE.read_branch_data(self.buses)
+        self.machines = PSSE.read_machine_data(self.buses)
 
         self.pb_edit.clicked.connect(self.__edit_action)
         self.pb_remove.clicked.connect(self.__remove_action)
@@ -67,6 +67,19 @@ class UIScenario(QMainWindow):
                            and action.argument.name not in self.clears]
             self.faults = [action.argument] + self.faults
             self.__child = UIPickElement(self, "Clear Fault", self.faults, "clear_fault", action)
+        elif action.method_key == "line_trip":
+            branches = [action.argument] + self.available_elements(self.branches, "line_trip")
+            self.__child = UIPickElement(self, "Trip Line", branches, "line_trip", action)
+        elif action.method_key == "line_close":
+            branches = [action.argument] + \
+                       self.available_elements({k: v for k, v in self.branches.items() if v.status != 1}, "line_close")
+            self.__child = UIPickElement(self, "Close Line", branches, "line_close", action)
+        elif action.method_key == "bus_disconnect":
+            buses = [action.argument] + self.available_elements(self.buses, "bus_disconnect")
+            self.__child = UIPickElement(self, "Disconnect Bus", buses, "bus_disconnect", action)
+        elif action.method_key == "machine_disconnect":
+            machines = [action.argument] + self.available_elements(self.machines, "machine_disconnect")
+            self.__child = UIPickElement(self, "Disconnect Machine", machines, "machine_disconnect", action)
         self.update_action_list()
 
     def __remove_action(self):
