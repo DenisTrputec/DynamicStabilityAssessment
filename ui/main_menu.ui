@@ -64,6 +64,28 @@
      <string>Edit Assessment</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pb_run_assessment">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>250</y>
+      <width>211</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string>Edit Existing Assessment</string>
+    </property>
+    <property name="text">
+     <string>Run Assessment</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

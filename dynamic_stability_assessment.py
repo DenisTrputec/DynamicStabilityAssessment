@@ -5,6 +5,7 @@ from PyQt6 import uic
 
 from dsa.assessment import Assessment
 from ui_py.ui_assessment import UIAssessment
+from ui_py.ui_run_options import UIRunOptions
 from utils.logger import logger
 
 
@@ -16,6 +17,7 @@ class MainMenu(QMainWindow):
 
         self.pb_create_assessment.clicked.connect(self.__create_assessment)
         self.pb_edit_assessment.clicked.connect(self.__edit_assessment)
+        self.pb_run_assessment.clicked.connect(self.__run_assessment)
 
     def __create_assessment(self):
         logger.info("")
@@ -29,6 +31,14 @@ class MainMenu(QMainWindow):
             return
         assessment = Assessment.load_from_json(filepath)
         self.__child = UIAssessment(self, assessment)
+
+    def __run_assessment(self):
+        logger.info("")
+        filepath, _ = QFileDialog.getOpenFileName(self, 'Browse', filter='*.json')
+        if not exists(filepath):
+            return
+        assessment = Assessment.load_from_json(filepath)
+        self.__child = UIRunOptions(self, assessment)
 
     def close_child_window(self):
         self.__child = None
