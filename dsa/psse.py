@@ -83,50 +83,54 @@ class PSSE:
         psspy.set_netfrq(status=1)
 
     @staticmethod
+    def reset_plot_channels():
+        psspy.delete_all_plot_channels()
+
+    @staticmethod
     def simulation(time: float):
-        logger(f"Simulation: {time}s]")
+        logger.info(f"Simulation: {time}s]")
         ierr = psspy.run(tpause=time)
         return psse_error.run[ierr]
 
     @staticmethod
     def bus_fault(bus: Bus):
-        logger(f"Bus Fault: {bus.name}")
+        logger.info(f"Bus Fault: {bus.name}")
         ierr = psspy.dist_3phase_bus_fault(ibus=bus.number)
         return psse_error.dist_3phase_bus_fault[ierr]
 
     @staticmethod
     def line_fault(branch: Branch):
-        logger(f"Line Fault: {branch.name}")
+        logger.info(f"Line Fault: {branch.name}")
         ierr = psspy.dist_branch_fault(ibus=branch.bus1.number, jbus=branch.bus2.number, id=branch.id)
         return psse_error.dist_branch_fault[ierr]
 
     @staticmethod
     def clear_fault(index: int):
-        logger(f"Clear Fault: {index}")
+        logger.info(f"Clear Fault: {index}")
         ierr = psspy.dist_clear_fault(fault=index)
         return psse_error.dist_clear_fault[ierr]
 
     @staticmethod
     def line_trip(branch: Branch):
-        logger(f"Line Trip: {branch.name}")
+        logger.info(f"Line Trip: {branch.name}")
         ierr = psspy.dist_branch_trip(ibus=branch.bus1.number, jbus=branch.bus2.number, id=branch.id)
         return psse_error.dist_branch_fault[ierr]
 
     @staticmethod
     def line_close(branch: Branch):
-        logger(f"Line Close: {branch.name}")
+        logger.info(f"Line Close: {branch.name}")
         ierr = psspy.dist_branch_close(ibus=branch.bus1.number, jbus=branch.bus2.number, id=branch.id)
         return psse_error.dist_branch_close[ierr]
 
     @staticmethod
     def bus_disconnect(bus: Bus):
-        logger(f"Bus Disconnect: {bus.name}")
+        logger.info(f"Bus Disconnect: {bus.name}")
         ierr = psspy.dist_bus_trip(ibus=bus.number)
         return psse_error.dist_bus_trip[ierr]
 
     @staticmethod
     def machine_disconnect(machine: Machine):
-        logger(f"Machine Disconnect: {machine.bus.name}")
+        logger.info(f"Machine Disconnect: {machine.bus.name}")
         ierr = psspy.dist_machine_trip(ibus=machine.bus.number, id=machine.id)
         return psse_error.dist_machine_trip[ierr]
 
@@ -140,6 +144,18 @@ class PSSE:
         "bus_disconnect": bus_disconnect,
         "machine_disconnect": machine_disconnect
     }
+
+    @staticmethod
+    def initialize_output(output_filepath: str):
+        logger.info(f"Initialize output file: {output_filepath}")
+        ierr = psspy.strt_2(options=[0, 0], outfile=output_filepath)
+        return psse_error.strt_2[ierr]
+
+    @staticmethod
+    def add_voltage_channel(bus: Bus):
+        logger.info(f"Add Voltage Channel for Bus: {bus.name}")
+        ierr = psspy.voltage_channel(status=[-1, -1, -1, bus.number], ident=bus.name[:8])
+        return psse_error.voltage_channel[ierr]
 
 
 if __name__ == '__main__':

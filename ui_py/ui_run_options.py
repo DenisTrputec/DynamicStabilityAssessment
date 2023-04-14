@@ -63,7 +63,7 @@ class UIRunOptions(QMainWindow):
             if checkbox.isChecked():
                 if checkbox.property("scenario"):
                     scenarios_to_run.append(checkbox.property("scenario"))
-        self.__child = UIRun(self, output_folder, model, scenarios_to_run)
+        self.__child = UIRun(self, output_folder, model, scenarios_to_run, {})
 
     def set_window(self):
         logger.info("")

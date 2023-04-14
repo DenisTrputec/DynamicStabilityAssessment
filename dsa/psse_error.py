@@ -105,3 +105,23 @@ dist_machine_trip = {
     4: "machine is already in-service",
     5: "prerequisite requirements for API are not met"
 }
+
+strt_2 = {
+    0: None,
+    1: "generators are not converted",
+    2: "invalid OPTIONS value",
+    3: "prior initialization modified the loads - pick up original converted case",
+    4: "error opening OUTFILE",
+    5: "prerequisite requirements for API are not met",
+}
+
+voltage_channel = {
+    0: None,
+    1: "invalid STATUS value",
+    2: "starting channel number is greater than the largest channel number allowed",
+    3: "starting VAR index is greater than the largest VAR index allowed",
+    4: "starting ICON index is greater than the largest ICON index allowed",
+    5: "the maximum number of channel monitoring models has already been specified",
+    6: "bus not found",
+    7: "prerequisite requirements for API are not met"
+}
