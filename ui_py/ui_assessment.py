@@ -81,6 +81,6 @@ class UIAssessment(QMainWindow):
         self.lw_models.insertItem(row_number, model.name)
 
     def closeEvent(self, event):
-        logger.info(f"")
+        logger.info("")
         self.parent.close_child_window()
         event.accept()

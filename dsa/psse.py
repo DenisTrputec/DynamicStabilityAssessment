@@ -18,6 +18,7 @@ with open('config.json') as handle:
         os.environ['PATH'] = os.environ['PATH'] + ';' + path
 
 import psspy
+from psspy import _f
 
 
 class PSSE:
@@ -32,6 +33,12 @@ class PSSE:
         ierr = psspy.read(ifile=filepath)
         if ierr != 0:
             raise Exception(f"PSSE.read_raw: {psse_error.read[ierr]}")
+
+    @staticmethod
+    def read_dyr(filepath):
+        ierr = psspy.dyre_new(dyrefile=filepath)
+        if ierr != 0:
+            raise Exception(f"PSSE.read_raw: {psse_error.dyre_new[ierr]}")
 
     @staticmethod
     def read_bus_data():
@@ -68,6 +75,12 @@ class PSSE:
         for number, status, machine_id in zip(bus_numbers, statuses, machine_ids[0]):
             machine_dict[(number, machine_id)] = Machine(bus_dict[number], machine_id, status)
         return machine_dict
+
+    @staticmethod
+    def set_dynamic_parameters():
+        psspy.dynamics_solution_param_2(realar=[_f, _f, 0.002, _f, _f, _f, _f, _f])
+        psspy.set_relang(switch=1, ibusex=-1, id="")
+        psspy.set_netfrq(status=1)
 
     @staticmethod
     def simulation(time: float):

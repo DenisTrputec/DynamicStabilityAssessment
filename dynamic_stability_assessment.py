@@ -41,6 +41,7 @@ class MainMenu(QMainWindow):
         self.__child = UIRunOptions(self, assessment)
 
     def close_child_window(self):
+        logger.inf("")
         self.__child = None
         self.show()
 

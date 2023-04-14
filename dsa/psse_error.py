@@ -8,6 +8,13 @@ read = {
     11: "prerequisite requirements for API are not met"
 }
 
+dyre_new = {
+    0: None,
+    1: "invalid STARTINDX value",
+    3: "error opening output file",
+    4: "prerequisite requirements for API are not met"
+}
+
 run = {
     0: None,
     1: "activity STRT needs to be executed",
