@@ -8,6 +8,21 @@ read = {
     11: "prerequisite requirements for API are not met"
 }
 
+readrawx = {
+    0: None,
+    2: "rawx read error",
+    3: "error opening SFILE",
+    4: "prerequisite requirements for API are not met"
+}
+
+case = {
+    0: None,
+    1: "SFILE is blank",
+    2: "error reading from SFILE",
+    3: "error opening SFILE",
+    4: "prerequisite requirements for API are not met"
+}
+
 dyre_new = {
     0: None,
     1: "invalid STARTINDX value",

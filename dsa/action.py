@@ -3,7 +3,7 @@ from typing import List, Union, Callable
 from power_system.bus import Bus
 from power_system.branch import Branch
 from power_system.machine import Machine
-from dsa.psse import PSSE
+from dsa import psse
 
 
 class Action:
@@ -18,9 +18,9 @@ class Action:
 
     def activate(self):
         if self.method_key == "clear_fault":
-            PSSE.method[self.method_key](self.index)
+            psse.method[self.method_key](self.index)
         else:
-            PSSE.method[self.method_key](self.argument)
+            psse.method[self.method_key](self.argument)
 
     def update_name(self):
         self.name = f"{self.name.split(':')[0]}: {self.argument}"

@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING, List, Union, Dict
 from PyQt6.QtWidgets import QMainWindow
 from PyQt6 import uic
 
+from dsa import psse
 from dsa.scenario import Scenario
-from dsa.psse import PSSE
 from ui_py.ui_pick_element import UIPickElement
 from ui_py.ui_pick_value import UIPickValue
 from utils.logger import logger
@@ -27,11 +27,11 @@ class UIScenario(QMainWindow):
         self.parent.hide()
         self.set_window()
 
-        PSSE.initialize()
-        PSSE.read_raw(self.parent.le_raw.text())
-        self.buses = PSSE.read_bus_data()
-        self.branches = PSSE.read_branch_data(self.buses)
-        self.machines = PSSE.read_machine_data(self.buses)
+        psse.initialize()
+        psse.read_model_file(self.parent.le_raw.text())
+        self.busses = psse.read_bus_data()
+        self.branches = psse.read_branch_data(self.busses)
+        self.machines = psse.read_machine_data(self.busses)
 
         self.pb_edit.clicked.connect(self.__edit_action)
         self.pb_remove.clicked.connect(self.__remove_action)
@@ -54,7 +54,7 @@ class UIScenario(QMainWindow):
         if action.method_key == "simulation":
             self.__child = UIPickValue(self, "Simulation", "simulation", action)
         elif action.method_key == "bus_fault":
-            buses = [action.argument] + self.available_elements(self.buses, "bus_fault")
+            buses = [action.argument] + self.available_elements(self.busses, "bus_fault")
             self.__child = UIPickElement(self, "Bus Fault", buses, "bus_fault", action)
         elif action.method_key == "line_fault":
             branches = [action.argument] + self.available_elements(self.branches, "line_fault")
@@ -75,7 +75,7 @@ class UIScenario(QMainWindow):
                        self.available_elements({k: v for k, v in self.branches.items() if v.status != 1}, "line_close")
             self.__child = UIPickElement(self, "Close Line", branches, "line_close", action)
         elif action.method_key == "bus_disconnect":
-            buses = [action.argument] + self.available_elements(self.buses, "bus_disconnect")
+            buses = [action.argument] + self.available_elements(self.busses, "bus_disconnect")
             self.__child = UIPickElement(self, "Disconnect Bus", buses, "bus_disconnect", action)
         elif action.method_key == "machine_disconnect":
             machines = [action.argument] + self.available_elements(self.machines, "machine_disconnect")
@@ -116,7 +116,7 @@ class UIScenario(QMainWindow):
 
     def __bus_fault(self):
         logger.info("")
-        buses = self.available_elements(self.buses, "bus_fault")
+        buses = self.available_elements(self.busses, "bus_fault")
         self.__child = UIPickElement(self, "Bus Fault", buses, "bus_fault")
 
     def __line_fault(self):
@@ -144,7 +144,7 @@ class UIScenario(QMainWindow):
 
     def __disconnect_bus(self):
         logger.info("")
-        buses = self.available_elements(self.buses, "bus_disconnect")
+        buses = self.available_elements(self.busses, "bus_disconnect")
         self.__child = UIPickElement(self, "Disconnect Bus", buses, "bus_disconnect")
 
     def __disconnect_machine(self):

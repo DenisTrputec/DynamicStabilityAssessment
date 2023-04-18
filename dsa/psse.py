@@ -10,7 +10,7 @@ from power_system.control_center import ControlCenter
 from utils.logger import logger
 
 
-with open('../config.json') as handle:
+with open('config.json') as handle:
     config = json.load(handle)
     for key in config["psse"]:
         path = config["psse"][key]
@@ -21,157 +21,174 @@ import psspy
 from psspy import _f
 
 
-class PSSE:
-    def __init__(self):
-        pass
+def initialize(busses=50000) -> str:
+    ierr = psspy.psseinit(busses)
+    if ierr != 0:
+        return f"Couldn't initialize PSSE\tError Code:{ierr}"
 
-    @staticmethod
-    def initialize(busses=50000):
-        ierr = psspy.psseinit(busses)
-        if ierr != 0:
-            raise Exception(f"Couldn't initialize PSSE\tError Code:{ierr}")
 
-    @staticmethod
-    def read_raw(filepath):
-        ierr = psspy.read(ifile=filepath)
-        if ierr != 0:
-            raise Exception(f"PSSE.read_raw: {psse_error.read[ierr]}")
+def read_model_file(filepath: str) -> str:
+    logger.info(f"Read model file: {filepath}")
+    if filepath.lower().endswith(".raw"):
+        return psse_error.read[psspy.read(ifile=filepath)]
+    elif filepath.lower().endswith(".rawx"):
+        return psse_error.readrawx[psspy.readrawx(sfile=filepath)]
+    else:
+        return psse_error.case[psspy.case(sfile=filepath)]
 
-    @staticmethod
-    def read_dyr(filepath):
-        ierr = psspy.dyre_new(dyrefile=filepath)
-        if ierr != 0:
-            raise Exception(f"PSSE.read_raw: {psse_error.dyre_new[ierr]}")
 
-    @staticmethod
-    def read_bus_data():
-        _, (numbers, types, areas) = psspy.abusint(flag=2, string=["NUMBER", "TYPE", "AREA"])
-        _, bases = psspy.abusreal(flag=2, string=["BASE"])
-        _, names = psspy.abuschar(flag=2, string=["NAME"])
-        bus_dict = {}
-        for number, bus_type, cc_number, base_voltage, name in zip(numbers, types, areas, bases[0], names[0]):
-            bus_dict[number] = Bus(number, name, base_voltage, bus_type, ControlCenter(cc_number))
-        return bus_dict
+def read_dynamics_file(filepath: str) -> str:
+    logger.info(f"Read dynamics file: {filepath}")
+    return psse_error.dyre_new[psspy.dyre_new(dyrefile=filepath)]
 
-    @staticmethod
-    def read_branch_data(bus_dict=None):
-        if not bus_dict:
-            bus_dict = PSSE.read_bus_data()
 
-        _, (from_numbers, to_numbers, statuses) = psspy.abrnint(flag=2, string=["FROMNUMBER", "TONUMBER", "STATUS"])
-        _, branch_ids = psspy.abrnchar(flag=2, string=["ID"])
+def read_bus_data() -> dict:
+    logger.info("")
+    err1, (numbers, types, areas) = psspy.abusint(flag=2, string=["NUMBER", "TYPE", "AREA"])
+    err2, bases = psspy.abusreal(flag=2, string=["BASE"])
+    err3, names = psspy.abuschar(flag=2, string=["NAME"])
 
-        branch_dict = {}
-        for b1, b2, statuses, branch_id in zip(from_numbers, to_numbers, statuses, branch_ids[0]):
-            branch_dict[(b1, b2, branch_id)] = Branch(bus_dict[b1], bus_dict[b2], branch_id, statuses)
-        return branch_dict
+    if any([err1, err2, err3]):
+        return {}
 
-    @staticmethod
-    def read_machine_data(bus_dict=None):
-        if not bus_dict:
-            bus_dict = PSSE.read_bus_data()
+    bus_dict = {}
+    for number, bus_type, cc_number, base_voltage, name in zip(numbers, types, areas, bases[0], names[0]):
+        bus_dict[number] = Bus(number, name, base_voltage, bus_type, ControlCenter(cc_number))
+    return bus_dict
 
-        _, (bus_numbers, statuses) = psspy.amachint(flag=4, string=["NUMBER", "STATUS"])
-        _, machine_ids = psspy.amachchar(flag=4, string=["ID"])
 
-        machine_dict = {}
-        for number, status, machine_id in zip(bus_numbers, statuses, machine_ids[0]):
-            machine_dict[(number, machine_id)] = Machine(bus_dict[number], machine_id, status)
-        return machine_dict
+def read_branch_data(bus_dict=None) -> dict:
+    logger.info("")
+    if not bus_dict:
+        bus_dict = read_bus_data()
 
-    @staticmethod
-    def set_dynamic_parameters():
-        psspy.dynamics_solution_param_2(realar=[_f, _f, 0.002, _f, _f, _f, _f, _f])
-        psspy.set_relang(switch=1, ibusex=-1, id="")
-        psspy.set_netfrq(status=1)
+    err1, (from_numbers, to_numbers, statuses) = psspy.abrnint(flag=2, string=["FROMNUMBER", "TONUMBER", "STATUS"])
+    err2, branch_ids = psspy.abrnchar(flag=2, string=["ID"])
 
-    @staticmethod
-    def reset_plot_channels():
-        psspy.delete_all_plot_channels()
+    if any([err1, err2]):
+        return {}
 
-    @staticmethod
-    def simulation(time: float):
-        logger.info(f"Simulation: {time}s]")
-        ierr = psspy.run(tpause=time)
-        return psse_error.run[ierr]
+    branch_dict = {}
+    for b1, b2, statuses, branch_id in zip(from_numbers, to_numbers, statuses, branch_ids[0]):
+        branch_dict[(b1, b2, branch_id)] = Branch(bus_dict[b1], bus_dict[b2], branch_id, statuses)
+    return branch_dict
 
-    @staticmethod
-    def bus_fault(bus: Bus):
-        logger.info(f"Bus Fault: {bus.name}")
-        ierr = psspy.dist_3phase_bus_fault(ibus=bus.number)
-        return psse_error.dist_3phase_bus_fault[ierr]
 
-    @staticmethod
-    def line_fault(branch: Branch):
-        logger.info(f"Line Fault: {branch.name}")
-        ierr = psspy.dist_branch_fault(ibus=branch.bus1.number, jbus=branch.bus2.number, id=branch.id)
-        return psse_error.dist_branch_fault[ierr]
+def read_machine_data(bus_dict=None) -> dict:
+    logger.info("")
+    if not bus_dict:
+        bus_dict = read_bus_data()
 
-    @staticmethod
-    def clear_fault(index: int):
-        logger.info(f"Clear Fault: {index}")
-        ierr = psspy.dist_clear_fault(fault=index)
-        return psse_error.dist_clear_fault[ierr]
+    err1, (bus_numbers, statuses) = psspy.amachint(flag=4, string=["NUMBER", "STATUS"])
+    err2, machine_ids = psspy.amachchar(flag=4, string=["ID"])
 
-    @staticmethod
-    def line_trip(branch: Branch):
-        logger.info(f"Line Trip: {branch.name}")
-        ierr = psspy.dist_branch_trip(ibus=branch.bus1.number, jbus=branch.bus2.number, id=branch.id)
-        return psse_error.dist_branch_fault[ierr]
+    if any([err1, err2]):
+        return {}
 
-    @staticmethod
-    def line_close(branch: Branch):
-        logger.info(f"Line Close: {branch.name}")
-        ierr = psspy.dist_branch_close(ibus=branch.bus1.number, jbus=branch.bus2.number, id=branch.id)
-        return psse_error.dist_branch_close[ierr]
+    machine_dict = {}
+    for number, status, machine_id in zip(bus_numbers, statuses, machine_ids[0]):
+        machine_dict[(number, machine_id)] = Machine(bus_dict[number], machine_id, status)
+    return machine_dict
 
-    @staticmethod
-    def bus_disconnect(bus: Bus):
-        logger.info(f"Bus Disconnect: {bus.name}")
-        ierr = psspy.dist_bus_trip(ibus=bus.number)
-        return psse_error.dist_bus_trip[ierr]
 
-    @staticmethod
-    def machine_disconnect(machine: Machine):
-        logger.info(f"Machine Disconnect: {machine.bus.name}")
-        ierr = psspy.dist_machine_trip(ibus=machine.bus.number, id=machine.id)
-        return psse_error.dist_machine_trip[ierr]
+def set_dynamic_parameters(simulation_time_step: float = 0.002):
+    logger.info(f"")
+    psspy.dynamics_solution_param_2(realar=[_f, _f, simulation_time_step, _f, _f, _f, _f, _f])
+    psspy.set_relang(switch=1, ibusex=-1, id="")
+    psspy.set_netfrq(status=1)
 
-    method = {
-        "simulation": simulation,
-        "bus_fault": bus_fault,
-        "line_fault": line_fault,
-        "clear_fault": clear_fault,
-        "line_trip": line_trip,
-        "line_close": line_close,
-        "bus_disconnect": bus_disconnect,
-        "machine_disconnect": machine_disconnect
-    }
 
-    @staticmethod
-    def initialize_output(output_filepath: str):
-        logger.info(f"Initialize output file: {output_filepath}")
-        psspy.cong(0)
-        psspy.conl(0, 1, 1, [0, 0], [100.0, 0.0, 0.0, 100.0])
-        psspy.conl(0, 1, 2, [0, 0], [100.0, 0.0, 0.0, 100.0])
-        psspy.conl(0, 1, 3, [0, 0], [100.0, 0.0, 0.0, 100.0])
-        psspy.ordr(0)
-        psspy.fact()
-        psspy.tysl(0)
-        ierr = psspy.strt_2(options=[0, 0], outfile=output_filepath)
-        return psse_error.strt_2[ierr]
+def convert_model():
+    logger.info(f"")
+    psspy.cong(0)
+    psspy.conl(0, 1, 1, [0, 0], [100.0, 0.0, 0.0, 100.0])
+    psspy.conl(0, 1, 2, [0, 0], [100.0, 0.0, 0.0, 100.0])
+    psspy.conl(0, 1, 3, [0, 0], [100.0, 0.0, 0.0, 100.0])
+    psspy.ordr(0)
+    psspy.fact()
+    psspy.tysl(0)
 
-    @staticmethod
-    def add_voltage_channel(bus: Bus):
-        logger.info(f"Add Voltage Channel for Bus: {bus.name}")
-        ierr = psspy.voltage_channel(status=[-1, -1, -1, bus.number], ident=bus.name[:8])
-        return psse_error.voltage_channel[ierr]
+
+def reset_plot_channels():
+    logger.info("")
+    psspy.delete_all_plot_channels()
+
+
+def initialize_output(output_filepath: str):
+    logger.info(f"Initialize output file: {output_filepath}")
+    return psse_error.strt_2[psspy.strt_2(options=[0, 0], outfile=output_filepath)]
+
+
+def add_voltage_channel(bus: Bus):
+    logger.info(f"Add Voltage Channel for Bus: {bus.name}")
+    return psse_error.voltage_channel[psspy.voltage_channel(status=[-1, -1, -1, bus.number], ident=bus.name[:8])]
+
+
+def simulation(time: float):
+    logger.info(f"Simulation: {time}s]")
+    return psse_error.run[psspy.run(tpause=time)]
+
+
+def bus_fault(bus: Bus):
+    logger.info(f"Bus Fault: {bus.name}")
+    return psse_error.dist_3phase_bus_fault[psspy.dist_3phase_bus_fault(ibus=bus.number)]
+
+
+def line_fault(branch: Branch):
+    logger.info(f"Line Fault: {branch.name}")
+    ierr = psspy.dist_branch_fault(ibus=branch.bus1.number, jbus=branch.bus2.number, id=branch.id)
+    return psse_error.dist_branch_fault[ierr]
+
+
+def clear_fault(index: int):
+    logger.info(f"Clear Fault: {index}")
+    return psse_error.dist_clear_fault[psspy.dist_clear_fault(fault=index)]
+
+
+def line_trip(branch: Branch):
+    logger.info(f"Line Trip: {branch.name}")
+    ierr = psspy.dist_branch_trip(ibus=branch.bus1.number, jbus=branch.bus2.number, id=branch.id)
+    return psse_error.dist_branch_fault[ierr]
+
+
+def line_close(branch: Branch):
+    logger.info(f"Line Close: {branch.name}")
+    ierr = psspy.dist_branch_close(ibus=branch.bus1.number, jbus=branch.bus2.number, id=branch.id)
+    return psse_error.dist_branch_close[ierr]
+
+
+def bus_disconnect(bus: Bus):
+    logger.info(f"Bus Disconnect: {bus.name}")
+    return psse_error.dist_bus_trip[psspy.dist_bus_trip(ibus=bus.number)]
+
+
+def machine_disconnect(machine: Machine):
+    logger.info(f"Machine Disconnect: {machine.bus.name}")
+    return psse_error.dist_machine_trip[psspy.dist_machine_trip(ibus=machine.bus.number, id=machine.id)]
+
+
+method = {
+    "simulation": simulation,
+    "bus_fault": bus_fault,
+    "line_fault": line_fault,
+    "clear_fault": clear_fault,
+    "line_trip": line_trip,
+    "line_close": line_close,
+    "bus_disconnect": bus_disconnect,
+    "machine_disconnect": machine_disconnect
+}
 
 
 if __name__ == '__main__':
-    PSSE.initialize()
-    PSSE.read_raw(r"""E:\Python3\DynamicStabilityAssessment\input_files\S10_final_converted.raw""")
-    PSSE.read_dyr(r"""E:\Python3\DynamicStabilityAssessment\input_files\DINAMIKA_KOMPLET.dyr""")
-    PSSE.set_dynamic_parameters()
-    PSSE.initialize_output(r"""E:\Python3\DynamicStabilityAssessment\output\S10\temp.outx""")
-    PSSE.method["simulation"](1.0)
+    initialize()
+    read_model_file(r"""E:\Python3\DynamicStabilityAssessment\input_files\S10_final.raw""")
+    read_dynamics_file(r"""E:\Python3\DynamicStabilityAssessment\input_files\DINAMIKA_KOMPLET.dyr""")
+    bus_data = read_bus_data()
+    read_branch_data(bus_data)
+    read_machine_data(bus_data)
+    set_dynamic_parameters()
+    convert_model()
+    for b in bus_data.values():
+        add_voltage_channel(b)
+        break
+    initialize_output(r"""E:\Python3\DynamicStabilityAssessment\output\S10\temp.outx""")

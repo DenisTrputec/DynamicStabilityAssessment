@@ -4,9 +4,9 @@ from typing import TYPE_CHECKING, List
 from PyQt6.QtWidgets import QMainWindow
 from PyQt6 import uic
 
+from dsa import psse
 from dsa.model import Model
 from dsa.scenario import Scenario
-from dsa.psse import PSSE
 from utils.logger import logger
 from utils.system_manager import SystemManager
 
@@ -54,26 +54,27 @@ class UIRun(QMainWindow):
         logger.info("")
         self.lbl_initialize.setText("Running")
         self.lbl_scenario.setText(f"{scenario.name}   {index + 1}/{len(self.__scenarios)}")
-        PSSE.initialize()
-        PSSE.read_raw(self.__model.raw_path)
-        PSSE.read_dyr(self.__model.dyr_path)
-        PSSE.set_dynamic_parameters()
+        psse.initialize()
+        psse.read_model_file(self.__model.raw_path)
+        psse.read_dynamics_file(self.__model.dyr_path)
+        psse.convert_model()
+        psse.set_dynamic_parameters()
         self.lbl_initialize.setText("Done")
 
     def run_task(self, scenario: Scenario):
         logger.info("")
         self.lbl_task1.setText("Running")
 
-        PSSE.reset_plot_channels()
-        busses = PSSE.read_bus_data()
+        psse.reset_plot_channels()
+        busses = psse.read_bus_data()
         for bus in busses.values():
-            err_msg = PSSE.add_voltage_channel(bus)
+            err_msg = psse.add_voltage_channel(bus)
             if err_msg:
                 self.lbl_task1.setText(f"Error: {err_msg}")
                 return False
             break
 
-        err_msg = PSSE.initialize_output(os.path.join(self.__output_folder, "task1.outx"))
+        err_msg = psse.initialize_output(os.path.join(self.__output_folder, "task1.outx"))
         if err_msg:
             self.lbl_task1.setText(err_msg)
             return False
