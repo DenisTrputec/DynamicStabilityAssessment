@@ -77,6 +77,11 @@ class UIRun(QMainWindow):
         if err_msg:
             self.lbl_task1.setText(err_msg)
             return False
+
+        for action in scenario.actions:
+            print(action.name, action.method_key, action.argument, action.index)
+            action.activate()
+
         self.lbl_task1.setText("Done")
         return True
 

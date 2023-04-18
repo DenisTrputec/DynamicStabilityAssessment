@@ -10,7 +10,7 @@ from power_system.control_center import ControlCenter
 from utils.logger import logger
 
 
-with open('config.json') as handle:
+with open('../config.json') as handle:
     config = json.load(handle)
     for key in config["psse"]:
         path = config["psse"][key]
@@ -22,6 +22,9 @@ from psspy import _f
 
 
 class PSSE:
+    def __init__(self):
+        pass
+
     @staticmethod
     def initialize(busses=50000):
         ierr = psspy.psseinit(busses)
@@ -148,6 +151,13 @@ class PSSE:
     @staticmethod
     def initialize_output(output_filepath: str):
         logger.info(f"Initialize output file: {output_filepath}")
+        psspy.cong(0)
+        psspy.conl(0, 1, 1, [0, 0], [100.0, 0.0, 0.0, 100.0])
+        psspy.conl(0, 1, 2, [0, 0], [100.0, 0.0, 0.0, 100.0])
+        psspy.conl(0, 1, 3, [0, 0], [100.0, 0.0, 0.0, 100.0])
+        psspy.ordr(0)
+        psspy.fact()
+        psspy.tysl(0)
         ierr = psspy.strt_2(options=[0, 0], outfile=output_filepath)
         return psse_error.strt_2[ierr]
 
@@ -160,12 +170,8 @@ class PSSE:
 
 if __name__ == '__main__':
     PSSE.initialize()
-    try:
-        PSSE.read_raw(r"D:\Programiranje\Moje aplikacije\Python\DynamicStabilityAssessment\input_files\sample.raw")
-    except Exception as e:
-        print(e)
-    buses = PSSE.read_bus_data()
-    branches = PSSE.read_branch_data()
-    machines = PSSE.read_machine_data()
-    for m in machines:
-        print(m)
+    PSSE.read_raw(r"""E:\Python3\DynamicStabilityAssessment\input_files\S10_final_converted.raw""")
+    PSSE.read_dyr(r"""E:\Python3\DynamicStabilityAssessment\input_files\DINAMIKA_KOMPLET.dyr""")
+    PSSE.set_dynamic_parameters()
+    PSSE.initialize_output(r"""E:\Python3\DynamicStabilityAssessment\output\S10\temp.outx""")
+    PSSE.method["simulation"](1.0)
