@@ -19,6 +19,7 @@ with open('config.json') as handle:
 
 import psspy
 from psspy import _f
+import dyntools
 
 
 def initialize(busses=50000) -> str:
@@ -124,6 +125,13 @@ def add_voltage_channel(bus: Bus):
     return psse_error.voltage_channel[psspy.voltage_channel(status=[-1, -1, -1, bus.number], ident=bus.name[:8])]
 
 
+def save_output(out_filepath: str, save_filepath: str):
+    logger.info(f"Save output file: {out_filepath}")
+    output_obj = dyntools.CHNF(out_filepath)
+    output_obj.csvout(channels=[], csvfile=save_filepath, outfile='')
+    return
+
+
 def simulation(time: float):
     logger.info(f"Simulation: {time}s]")
     return psse_error.run[psspy.run(tpause=time)]
@@ -190,5 +198,7 @@ if __name__ == '__main__':
     convert_model()
     for b in bus_data.values():
         add_voltage_channel(b)
-        break
-    initialize_output(r"""E:\Python3\DynamicStabilityAssessment\output\S10\temp.outx""")
+
+    initialize_output(r"""E:\Python3\DynamicStabilityAssessment\output\temp.out""")
+    simulation(1)
+    save_output(r"""E:\Python3\DynamicStabilityAssessment\output\temp.out""", r"""E:\Python3\DynamicStabilityAssessment\output\temp.csv""")

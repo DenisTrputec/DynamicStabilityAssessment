@@ -63,7 +63,11 @@ class UIRunOptions(QMainWindow):
             if checkbox.isChecked():
                 if checkbox.property("scenario"):
                     scenarios_to_run.append(checkbox.property("scenario"))
-        self.__child = UIRun(self, output_folder, model, scenarios_to_run, {})
+        options = {"branch_p": False, "bus_u": False}
+        for checkbox, option_key in zip(self.gb_options.findChildren(QCheckBox), options):
+            if checkbox.isChecked():
+                options[option_key] = True
+        self.__child = UIRun(self, output_folder, model, scenarios_to_run, options)
 
     def set_window(self):
         logger.info("")

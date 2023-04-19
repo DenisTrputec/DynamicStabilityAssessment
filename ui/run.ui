@@ -196,6 +196,29 @@
      <string>Task 1</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pb_run">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>510</y>
+      <width>141</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string>Run all selected scenarios</string>
+    </property>
+    <property name="text">
+     <string>Run</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

@@ -24,13 +24,15 @@ class UIRun(QMainWindow):
         self.__output_folder = os.path.join(output_folder, model.name)
         self.__model = model
         self.__scenarios = scenarios
+        self.__options = options
 
         self.parent = parent
         self.parent.hide()
         self.set_window()
 
         SystemManager.create_folder(self.__output_folder)
-        self.run_process()
+
+        self.pb_run.clicked.connect(self.run_process)
 
     def set_window(self):
         logger.info("")
@@ -46,7 +48,10 @@ class UIRun(QMainWindow):
         logger.info("")
         for index, scenario in enumerate(self.__scenarios):
             self.set_text_to_default()
-            self.initialize(index, scenario)
+            if not self.initialize(index, scenario):
+                break
+            if not self.add_channels():
+                break
             if not self.run_task(scenario):
                 break
 
@@ -54,25 +59,36 @@ class UIRun(QMainWindow):
         logger.info("")
         self.lbl_initialize.setText("Running")
         self.lbl_scenario.setText(f"{scenario.name}   {index + 1}/{len(self.__scenarios)}")
-        psse.initialize()
-        psse.read_model_file(self.__model.raw_path)
-        psse.read_dynamics_file(self.__model.dyr_path)
-        psse.convert_model()
-        psse.set_dynamic_parameters()
+        functions = [(psse.initialize, None),
+                     (psse.read_model_file, self.__model.raw_path),
+                     (psse.read_dynamics_file, self.__model.dyr_path),
+                     (psse.convert_model, None),
+                     (psse.set_dynamic_parameters, None),
+                     ]
+        for f, arg in functions:
+            err_msg = f(arg) if arg else f()
+            if err_msg:
+                self.lbl_initialize.setText(err_msg)
+                return False
         self.lbl_initialize.setText("Done")
+        return True
+
+    def add_channels(self):
+        psse.reset_plot_channels()
+        busses = psse.read_bus_data()
+        branches = psse.read_branch_data(busses)
+        if self.__options["bus_u"]:
+            for bus in busses.values():
+                err_msg = psse.add_voltage_channel(bus)
+                if err_msg:
+                    self.lbl_task1.setText(f"Error: {err_msg}")
+                    return False
+                break
+        return True
 
     def run_task(self, scenario: Scenario):
         logger.info("")
         self.lbl_task1.setText("Running")
-
-        psse.reset_plot_channels()
-        busses = psse.read_bus_data()
-        for bus in busses.values():
-            err_msg = psse.add_voltage_channel(bus)
-            if err_msg:
-                self.lbl_task1.setText(f"Error: {err_msg}")
-                return False
-            break
 
         err_msg = psse.initialize_output(os.path.join(self.__output_folder, "task1.outx"))
         if err_msg:
@@ -80,8 +96,9 @@ class UIRun(QMainWindow):
             return False
 
         for action in scenario.actions:
-            print(action.name, action.method_key, action.argument, action.index)
             action.activate()
+
+        psse.save_output(os.path.join(self.__output_folder, "task1.outx"), os.path.join(self.__output_folder, "task1.csv"))
 
         self.lbl_task1.setText("Done")
         return True
