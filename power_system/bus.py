@@ -2,12 +2,13 @@ from power_system.control_center import ControlCenter
 
 
 class Bus:
-    def __init__(self, number: int, name: str, base_voltage: float, bus_type: int, control_center: ControlCenter):
+    def __init__(self, number: int, name: str, base_voltage: float, bus_type: int, area: int, zone: int):
         self.number = number
         self.name = name
         self.base = base_voltage
         self.type = bus_type
-        self.cc = control_center
+        self.area = area
+        self.zone = zone
 
     def __str__(self):
         return f"{self.name}"
@@ -19,7 +20,8 @@ class Bus:
                f"\nName: {self.name}" \
                f"\nBase Voltage: {self.base}" \
                f"\nCode Type: {self.type}" \
-               f"\nControl Center: {self.cc.name}"
+               f"\nArea: {self.area}" \
+               f"\nZone: {self.zone}"
 
     @property
     def full_name(self):
@@ -31,11 +33,12 @@ class Bus:
         name = json_string["name"]
         base = json_string["base"]
         bus_type = json_string["type"]
-        cc = json_string["cc"]
-        instance = Bus(number, name, base, bus_type, ControlCenter(cc))
+        area = json_string["area"]
+        zone = json_string["zone"]
+        instance = Bus(number, name, base, bus_type, area, zone)
         return instance
 
 
 if __name__ == '__main__':
-    b = Bus(10000, "Zagreb", 400.0, 1, ControlCenter.NDC)
+    b = Bus(10000, "Zagreb", 400.0, 1, 16, 11)
     print(b.info)

@@ -15,7 +15,7 @@ class Machine:
                f"\nBus Number: {self.bus.number}" \
                f"\nBus Name: {self.bus.name}" \
                f"\nId: {self.id}" \
-               f"\nControl Center: {self.bus.cc.name}" \
+               f"\nControl Center: {self.bus.area}" \
                f"\nStatus: {self.status}"
 
     @property

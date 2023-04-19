@@ -45,7 +45,7 @@ def read_dynamics_file(filepath: str) -> str:
 
 def read_bus_data() -> dict:
     logger.info("")
-    err1, (numbers, types, areas) = psspy.abusint(flag=2, string=["NUMBER", "TYPE", "AREA"])
+    err1, (numbers, types, areas, zones) = psspy.abusint(flag=2, string=["NUMBER", "TYPE", "AREA", "ZONE"])
     err2, bases = psspy.abusreal(flag=2, string=["BASE"])
     err3, names = psspy.abuschar(flag=2, string=["NAME"])
 
@@ -53,8 +53,8 @@ def read_bus_data() -> dict:
         return {}
 
     bus_dict = {}
-    for number, bus_type, cc_number, base_voltage, name in zip(numbers, types, areas, bases[0], names[0]):
-        bus_dict[number] = Bus(number, name, base_voltage, bus_type, ControlCenter(cc_number))
+    for number, bus_type, area, zone, base_voltage, name in zip(numbers, types, areas, zones, bases[0], names[0]):
+        bus_dict[number] = Bus(number, name, base_voltage, bus_type, area, zone)
     return bus_dict
 
 

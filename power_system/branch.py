@@ -19,8 +19,8 @@ class Branch:
                f"\nBus 2 Number: {self.bus2.number}" \
                f"\nBus 2 Name: {self.bus2.name}" \
                f"\nId: {self.id}" \
-               f"\nControl Center 1: {self.bus1.cc.name}" \
-               f"\nControl Center 2: {self.bus2.cc.name}" \
+               f"\nArea 1: {self.bus1.area}" \
+               f"\nArea 2: {self.bus2.area}" \
                f"\nStatus: {self.status}"
 
     @property
