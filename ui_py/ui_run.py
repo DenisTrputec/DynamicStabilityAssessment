@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 class UIRun(QMainWindow):
     def __init__(self, parent: "UIRunOptions", output_folder: str, model: Model, scenarios: List[Scenario],
-                 options: dict):
+                 options: dict, filters: dict):
         logger.info("")
         super().__init__()
         uic.loadUi("ui/run.ui", self)
@@ -25,6 +25,7 @@ class UIRun(QMainWindow):
         self.__model = model
         self.__scenarios = scenarios
         self.__options = options
+        self.__filters = filters
 
         self.parent = parent
         self.parent.hide()
@@ -52,6 +53,7 @@ class UIRun(QMainWindow):
                 break
             if not self.add_channels():
                 break
+            return
             if not self.run_task(scenario):
                 break
 
@@ -75,15 +77,14 @@ class UIRun(QMainWindow):
 
     def add_channels(self):
         psse.reset_plot_channels()
-        busses = psse.read_bus_data()
-        branches = psse.read_branch_data(busses)
-        if self.__options["bus_u"]:
-            for bus in busses.values():
+        busses = psse.read_bus_data(filters=self.__filters)
+        branches = psse.read_branch_data()
+        for bus in busses.values():
+            if self.__options["bus_u"]:
                 err_msg = psse.add_voltage_channel(bus)
                 if err_msg:
                     self.lbl_task1.setText(f"Error: {err_msg}")
                     return False
-                break
         return True
 
     def run_task(self, scenario: Scenario):

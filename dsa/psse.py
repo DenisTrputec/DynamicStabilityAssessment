@@ -6,7 +6,6 @@ from dsa import psse_error
 from power_system.bus import Bus
 from power_system.branch import Branch
 from power_system.machine import Machine
-from power_system.control_center import ControlCenter
 from utils.logger import logger
 
 
@@ -43,7 +42,7 @@ def read_dynamics_file(filepath: str) -> str:
     return psse_error.dyre_new[psspy.dyre_new(dyrefile=filepath)]
 
 
-def read_bus_data() -> dict:
+def read_bus_data(filters: dict = None) -> dict:
     logger.info("")
     err1, (numbers, types, areas, zones) = psspy.abusint(flag=2, string=["NUMBER", "TYPE", "AREA", "ZONE"])
     err2, bases = psspy.abusreal(flag=2, string=["BASE"])
@@ -54,7 +53,12 @@ def read_bus_data() -> dict:
 
     bus_dict = {}
     for number, bus_type, area, zone, base_voltage, name in zip(numbers, types, areas, zones, bases[0], names[0]):
-        bus_dict[number] = Bus(number, name, base_voltage, bus_type, area, zone)
+        if filters:
+            for key, values in filters.items():
+                if key == "area" and area in values:
+                    bus_dict[number] = Bus(number, name, base_voltage, bus_type, area, zone)
+        else:
+            bus_dict[number] = Bus(number, name, base_voltage, bus_type, area, zone)
     return bus_dict
 
 
@@ -128,7 +132,7 @@ def add_voltage_channel(bus: Bus):
 def save_output(out_filepath: str, save_filepath: str):
     logger.info(f"Save output file: {out_filepath}")
     output_obj = dyntools.CHNF(out_filepath)
-    output_obj.csvout(channels=[], csvfile=save_filepath, outfile='')
+    output_obj.csvout(csvfile=save_filepath)
     return
 
 

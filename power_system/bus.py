@@ -1,6 +1,3 @@
-from power_system.control_center import ControlCenter
-
-
 class Bus:
     def __init__(self, number: int, name: str, base_voltage: float, bus_type: int, area: int, zone: int):
         self.number = number

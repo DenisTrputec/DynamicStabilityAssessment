@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QCheckBox, QFileDialog
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QCheckBox, QFileDialog, QLineEdit
 from PyQt6 import uic
 
 from dsa.assessment import Assessment
@@ -58,16 +58,26 @@ class UIRunOptions(QMainWindow):
         logger.info("")
         output_folder = self.le_output.text()
         model = self.cb_models.currentData()
+
         scenarios_to_run = []
         for checkbox in self.gb_scenarios.findChildren(QCheckBox):
             if checkbox.isChecked():
                 if checkbox.property("scenario"):
                     scenarios_to_run.append(checkbox.property("scenario"))
+
         options = {"branch_p": False, "bus_u": False}
         for checkbox, option_key in zip(self.gb_options.findChildren(QCheckBox), options):
             if checkbox.isChecked():
                 options[option_key] = True
-        self.__child = UIRun(self, output_folder, model, scenarios_to_run, options)
+
+        filters = {"area": []}
+        for line_edit, filter_key in zip(self.gb_options.findChildren(QLineEdit), filters):
+            values = line_edit.text().split(',')
+            try:
+                filters[filter_key] = [int(v.strip()) for v in values]
+            except ValueError:
+                pass
+        self.__child = UIRun(self, output_folder, model, scenarios_to_run, options, filters)
 
     def set_window(self):
         logger.info("")
