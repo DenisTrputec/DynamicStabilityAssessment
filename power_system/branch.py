@@ -25,11 +25,11 @@ class Branch:
 
     @property
     def name(self):
-        return f"{self.bus1.name}-{self.bus2.name}/{self.id}"
+        return f"{self.bus1.name.strip()}-{self.bus2.name.strip()}/{self.id.strip()}"
 
     @property
     def full_name(self):
-        return f"[{self.bus1.number}]{self.bus1.name}-[{self.bus2.number}]{self.bus2.name}/{self.id}"
+        return f"{self.bus1.full_name}-{self.bus2.full_name}/{self.id.strip()}"
 
     @classmethod
     def load_from_json(cls, json_string):

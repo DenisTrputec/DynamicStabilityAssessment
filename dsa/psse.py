@@ -54,15 +54,15 @@ def read_bus_data(filters: dict = None) -> dict:
     bus_dict = {}
     for number, bus_type, area, zone, base_voltage, name in zip(numbers, types, areas, zones, bases[0], names[0]):
         if filters:
-            for key, values in filters.items():
-                if key == "area" and area in values:
+            for k, values in filters.items():
+                if k == "area" and area in values:
                     bus_dict[number] = Bus(number, name, base_voltage, bus_type, area, zone)
         else:
             bus_dict[number] = Bus(number, name, base_voltage, bus_type, area, zone)
     return bus_dict
 
 
-def read_branch_data(bus_dict=None) -> dict:
+def read_branch_data(bus_dict=None, filters: dict = None) -> dict:
     logger.info("")
     if not bus_dict:
         bus_dict = read_bus_data()
@@ -75,7 +75,14 @@ def read_branch_data(bus_dict=None) -> dict:
 
     branch_dict = {}
     for b1, b2, statuses, branch_id in zip(from_numbers, to_numbers, statuses, branch_ids[0]):
-        branch_dict[(b1, b2, branch_id)] = Branch(bus_dict[b1], bus_dict[b2], branch_id, statuses)
+        bus1 = bus_dict[b1]
+        bus2 = bus_dict[b2]
+        if filters:
+            for k, values in filters.items():
+                if k == "area" and (bus1.area in values or bus2.area in values):
+                    branch_dict[(b1, b2, branch_id)] = Branch(bus1, bus2, branch_id, statuses)
+        else:
+            branch_dict[(b1, b2, branch_id)] = Branch(bus1, bus2, branch_id, statuses)
     return branch_dict
 
 
@@ -124,9 +131,16 @@ def initialize_output(output_filepath: str):
     return psse_error.strt_2[psspy.strt_2(options=[0, 0], outfile=output_filepath)]
 
 
-def add_voltage_channel(bus: Bus):
+def add_bus_u_channel(bus: Bus):
     logger.info(f"Add Voltage Channel for Bus: {bus.name}")
-    return psse_error.voltage_channel[psspy.voltage_channel(status=[-1, -1, -1, bus.number], ident=bus.name[:8])]
+    return psse_error.voltage_channel[psspy.voltage_channel(status=[-1, -1, -1, bus.number], ident=bus.name)]
+
+
+def add_branch_p_channel(branch: Branch):
+    logger.info(f"Add Voltage Channel for Bus: {branch.name}")
+    return psse_error.branch_p_channel[
+        psspy.branch_p_channel(status=[-1, -1, -1, branch.bus1.number, branch.bus2.number],
+                               id=branch.id, ident=branch.name)]
 
 
 def save_output(out_filepath: str, save_filepath: str):
@@ -201,7 +215,7 @@ if __name__ == '__main__':
     set_dynamic_parameters()
     convert_model()
     for b in bus_data.values():
-        add_voltage_channel(b)
+        add_bus_u_channel(b)
 
     initialize_output(r"""E:\Python3\DynamicStabilityAssessment\output\temp.out""")
     simulation(1)

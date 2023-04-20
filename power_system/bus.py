@@ -22,7 +22,7 @@ class Bus:
 
     @property
     def full_name(self):
-        return f"[{self.number}]{self.name}"
+        return f"[{self.number}]{self.name.strip()}"
 
     @classmethod
     def load_from_json(cls, json_string):

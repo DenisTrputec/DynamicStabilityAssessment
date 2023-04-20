@@ -53,7 +53,6 @@ class UIRun(QMainWindow):
                 break
             if not self.add_channels():
                 break
-            return
             if not self.run_task(scenario):
                 break
 
@@ -78,10 +77,16 @@ class UIRun(QMainWindow):
     def add_channels(self):
         psse.reset_plot_channels()
         busses = psse.read_bus_data(filters=self.__filters)
-        branches = psse.read_branch_data()
+        branches = psse.read_branch_data(filters=self.__filters)
         for bus in busses.values():
             if self.__options["bus_u"]:
-                err_msg = psse.add_voltage_channel(bus)
+                err_msg = psse.add_bus_u_channel(bus)
+                if err_msg:
+                    self.lbl_task1.setText(f"Error: {err_msg}")
+                    return False
+        for branch in branches.values():
+            if self.__options["branch_p"]:
+                err_msg = psse.add_branch_p_channel(branch)
                 if err_msg:
                     self.lbl_task1.setText(f"Error: {err_msg}")
                     return False

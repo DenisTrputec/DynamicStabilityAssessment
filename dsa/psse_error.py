@@ -140,3 +140,17 @@ voltage_channel = {
     6: "bus not found",
     7: "prerequisite requirements for API are not met"
 }
+
+
+branch_p_channel = {
+    0: None,
+    1: "invalid STATUS value",
+    2: "starting channel number is greater than the largest channel number allowed",
+    3: "starting VAR index is greater than the largest VAR index allowed",
+    4: "starting ICON index is greater than the largest ICON index allowed",
+    5: "model FLOW1 needs 3 ICONs but the last one exceeds the largest ICON index allowed",
+    6: "the maximum number of channel monitoring models has already been specified",
+    7: "bus not found",
+    8: "branch not found",
+    9: "prerequisite requirements for API are not met"
+}
