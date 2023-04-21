@@ -2,10 +2,11 @@ from power_system.bus import Bus
 
 
 class Machine:
-    def __init__(self, bus: Bus, machine_id: str, status: int):
+    def __init__(self, bus: Bus, machine_id: str, status: int, mode: int):
         self.bus = bus
         self.id = machine_id
         self.status = status
+        self.mode = mode
 
     def __str__(self):
         return f"{self.bus.name}/{self.id}"
@@ -16,7 +17,8 @@ class Machine:
                f"\nBus Name: {self.bus.name}" \
                f"\nId: {self.id}" \
                f"\nControl Center: {self.bus.area}" \
-               f"\nStatus: {self.status}"
+               f"\nStatus: {self.status}" \
+               f"\nMode: {self.mode}"
 
     @property
     def name(self):
@@ -31,5 +33,6 @@ class Machine:
         bus = Bus.load_from_json(json_string["bus"])
         machine_id = json_string["id"]
         status = json_string["status"]
-        instance = Machine(bus, machine_id, status)
+        mode = json_string["mode"]
+        instance = Machine(bus, machine_id, status, mode)
         return instance

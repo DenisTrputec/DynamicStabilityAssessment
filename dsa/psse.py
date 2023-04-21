@@ -91,15 +91,15 @@ def read_machine_data(bus_dict=None) -> dict:
     if not bus_dict:
         bus_dict = read_bus_data()
 
-    err1, (bus_numbers, statuses) = psspy.amachint(flag=4, string=["NUMBER", "STATUS"])
+    err1, (bus_numbers, statuses, modes) = psspy.amachint(flag=4, string=["NUMBER", "STATUS", "WMOD"])
     err2, machine_ids = psspy.amachchar(flag=4, string=["ID"])
 
     if any([err1, err2]):
         return {}
 
     machine_dict = {}
-    for number, status, machine_id in zip(bus_numbers, statuses, machine_ids[0]):
-        machine_dict[(number, machine_id)] = Machine(bus_dict[number], machine_id, status)
+    for number, status, mode, machine_id in zip(bus_numbers, statuses, modes, machine_ids[0]):
+        machine_dict[(number, machine_id)] = Machine(bus_dict[number], machine_id, status, mode)
     return machine_dict
 
 
