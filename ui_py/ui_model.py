@@ -15,15 +15,16 @@ if TYPE_CHECKING:
 
 
 class UIModel(QMainWindow):
-    def __init__(self, parent: "UIAssessment", model: Model):
+    def __init__(self, parent: "UIAssessment", model: Model, is_new: bool = False):
         logger.info("")
         super().__init__()
         uic.loadUi("ui/model.ui", self)
-        self.__child = None
-        self.model = model
+
         self.parent = parent
+        self.model = model
+        self.is_new = is_new
+        self.child = None
         self.message = None
-        self.set_window()
 
         self.pb_raw.clicked.connect(self.__browse_raw)
         self.pb_dyr.clicked.connect(self.__browse_dyr)
@@ -31,6 +32,9 @@ class UIModel(QMainWindow):
         self.pb_edit.clicked.connect(self.__edit_scenario)
         self.pb_remove.clicked.connect(self.__remove_scenario)
         self.pb_save.clicked.connect(self.__save)
+        self.pb_back.clicked.connect(self.__back)
+
+        self.set_window()
 
     def __browse_raw(self):
         logger.info("")
@@ -50,7 +54,7 @@ class UIModel(QMainWindow):
             return
         scenario = Scenario()
         self.model.scenarios.append(scenario)
-        self.__child = UIScenario(self, scenario)
+        self.child = UIScenario(self, scenario, is_new=True)
 
     def __edit_scenario(self):
         logger.info("")
@@ -58,7 +62,7 @@ class UIModel(QMainWindow):
             return
         scenario_index = self.lw_scenarios.currentRow()
         if scenario_index >= 0:
-            self.__child = UIScenario(self, self.model.scenarios[scenario_index])
+            self.child = UIScenario(self, self.model.scenarios[scenario_index])
 
     def __remove_scenario(self):
         logger.info("")
@@ -72,6 +76,12 @@ class UIModel(QMainWindow):
         self.model.description = self.pte_description.toPlainText()
         self.model.raw_path = self.le_raw.text()
         self.model.dyr_path = self.le_dyr.text()
+        self.close()
+
+    def __back(self):
+        logger.info("")
+        if self.is_new:
+            self.parent.assessment.models.pop()
         self.close()
 
     def __check_raw(self):
@@ -100,6 +110,7 @@ class UIModel(QMainWindow):
 
     def closeEvent(self, event):
         logger.info("")
+        self.parent.child = None
         self.parent.update_model_list()
         self.parent.show()
         event.accept()

@@ -40,7 +40,7 @@
      <string>Save Model</string>
     </property>
     <property name="text">
-     <string>Save</string>
+     <string>Add Model</string>
     </property>
    </widget>
    <widget class="QLabel" name="lbl_name">
@@ -338,6 +338,29 @@
     </property>
     <property name="text">
      <string>Edit</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pb_back">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>420</y>
+      <width>141</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string>Return to Assessment Window without saving</string>
+    </property>
+    <property name="text">
+     <string>Back</string>
     </property>
    </widget>
   </widget>

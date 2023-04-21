@@ -13,16 +13,18 @@ class MainMenu(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi("ui/main_menu.ui", self)
-        self.__child = None
+
+        self.child = None
 
         self.pb_create_assessment.clicked.connect(self.__create_assessment)
         self.pb_edit_assessment.clicked.connect(self.__edit_assessment)
         self.pb_run_assessment.clicked.connect(self.__run_assessment)
+        self.pb_quit.clicked.connect(self.__quit)
 
     def __create_assessment(self):
         logger.info("")
         assessment = Assessment()
-        self.__child = UIAssessment(self, assessment)
+        self.child = UIAssessment(self, assessment)
 
     def __edit_assessment(self):
         logger.info("")
@@ -30,7 +32,7 @@ class MainMenu(QMainWindow):
         if not exists(filepath):
             return
         assessment = Assessment.load_from_json(filepath)
-        self.__child = UIAssessment(self, assessment)
+        self.child = UIAssessment(self, assessment)
 
     def __run_assessment(self):
         logger.info("")
@@ -38,12 +40,11 @@ class MainMenu(QMainWindow):
         if not exists(filepath):
             return
         assessment = Assessment.load_from_json(filepath)
-        self.__child = UIRunOptions(self, assessment)
+        self.child = UIRunOptions(self, assessment)
 
-    def close_child_window(self):
+    def __quit(self):
         logger.info("")
-        self.__child = None
-        self.show()
+        self.close()
 
 
 if __name__ == '__main__':

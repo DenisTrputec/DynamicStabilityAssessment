@@ -17,14 +17,16 @@ if TYPE_CHECKING:
 
 
 class UIScenario(QMainWindow):
-    def __init__(self, parent: "UIModel", scenario: Scenario):
+    def __init__(self, parent: "UIModel", scenario: Scenario, is_new: bool = False):
         logger.info("")
         super().__init__()
         uic.loadUi("ui/scenario.ui", self)
-        self.__child = None
-        self.scenario = scenario
+
         self.parent = parent
-        self.parent.hide()
+        self.scenario = scenario
+        self.is_new = is_new
+        self.child = None
+
         self.set_window()
 
         psse.initialize()
@@ -46,19 +48,20 @@ class UIScenario(QMainWindow):
         self.pb_disconnect_bus.clicked.connect(self.__disconnect_bus)
         self.pb_disconnect_machine.clicked.connect(self.__disconnect_machine)
         self.pb_save.clicked.connect(self.__save)
+        self.pb_back.clicked.connect(self.__back)
 
     def __edit_action(self):
         logger.info("")
         index = self.lw_actions.currentRow()
         action = self.scenario.actions[index]
         if action.method_key == "simulation":
-            self.__child = UIPickValue(self, "Simulation", "simulation", action)
+            self.child = UIPickValue(self, "Simulation", "simulation", action)
         elif action.method_key == "bus_fault":
             buses = [action.argument] + self.available_elements(self.busses, "bus_fault")
-            self.__child = UIPickElement(self, "Bus Fault", buses, "bus_fault", action)
+            self.child = UIPickElement(self, "Bus Fault", buses, "bus_fault", action)
         elif action.method_key == "line_fault":
             branches = [action.argument] + self.available_elements(self.branches, "line_fault")
-            self.__child = UIPickElement(self, "Line Fault", branches, "line_fault", action)
+            self.child = UIPickElement(self, "Line Fault", branches, "line_fault", action)
         elif action.method_key == "clear_fault":
             self.clears = [action.argument.name for action in self.scenario.actions if
                            action.method_key == "clear_fault"]
@@ -66,20 +69,20 @@ class UIScenario(QMainWindow):
                            if action.method_key in ["bus_fault", "line_fault"]
                            and action.argument.name not in self.clears]
             self.faults = [action.argument] + self.faults
-            self.__child = UIPickElement(self, "Clear Fault", self.faults, "clear_fault", action)
+            self.child = UIPickElement(self, "Clear Fault", self.faults, "clear_fault", action)
         elif action.method_key == "line_trip":
             branches = [action.argument] + self.available_elements(self.branches, "line_trip")
-            self.__child = UIPickElement(self, "Trip Line", branches, "line_trip", action)
+            self.child = UIPickElement(self, "Trip Line", branches, "line_trip", action)
         elif action.method_key == "line_close":
             branches = [action.argument] + \
                        self.available_elements({k: v for k, v in self.branches.items() if v.status != 1}, "line_close")
-            self.__child = UIPickElement(self, "Close Line", branches, "line_close", action)
+            self.child = UIPickElement(self, "Close Line", branches, "line_close", action)
         elif action.method_key == "bus_disconnect":
             buses = [action.argument] + self.available_elements(self.busses, "bus_disconnect")
-            self.__child = UIPickElement(self, "Disconnect Bus", buses, "bus_disconnect", action)
+            self.child = UIPickElement(self, "Disconnect Bus", buses, "bus_disconnect", action)
         elif action.method_key == "machine_disconnect":
             machines = [action.argument] + self.available_elements(self.machines, "machine_disconnect")
-            self.__child = UIPickElement(self, "Disconnect Machine", machines, "machine_disconnect", action)
+            self.child = UIPickElement(self, "Disconnect Machine", machines, "machine_disconnect", action)
         self.update_action_list()
 
     def __remove_action(self):
@@ -112,17 +115,17 @@ class UIScenario(QMainWindow):
 
     def __simulation(self):
         logger.info("")
-        self.__child = UIPickValue(self, "Simulation", "simulation")
+        self.child = UIPickValue(self, "Simulation", "simulation")
 
     def __bus_fault(self):
         logger.info("")
         buses = self.available_elements(self.busses, "bus_fault")
-        self.__child = UIPickElement(self, "Bus Fault", buses, "bus_fault")
+        self.child = UIPickElement(self, "Bus Fault", buses, "bus_fault")
 
     def __line_fault(self):
         logger.info("")
         branches = self.available_elements(self.branches, "line_fault")
-        self.__child = UIPickElement(self, "Line Fault", branches, "line_fault")
+        self.child = UIPickElement(self, "Line Fault", branches, "line_fault")
 
     def __clear_fault(self):
         logger.info("")
@@ -130,32 +133,38 @@ class UIScenario(QMainWindow):
         self.faults = [action.argument for action in self.scenario.actions
                        if action.method_key in ["bus_fault", "line_fault"]
                        and action.argument.name not in self.clears]
-        self.__child = UIPickElement(self, "Clear Fault", self.faults, "clear_fault")
+        self.child = UIPickElement(self, "Clear Fault", self.faults, "clear_fault")
 
     def __trip_line(self):
         logger.info("")
         branches = self.available_elements(self.branches, "line_trip")
-        self.__child = UIPickElement(self, "Trip Line", branches, "line_trip")
+        self.child = UIPickElement(self, "Trip Line", branches, "line_trip")
 
     def __close_line(self):
         logger.info("")
         branches = self.available_elements({k: v for k, v in self.branches.items() if v.status != 1}, "line_close")
-        self.__child = UIPickElement(self, "Close Line", branches, "line_close")
+        self.child = UIPickElement(self, "Close Line", branches, "line_close")
 
     def __disconnect_bus(self):
         logger.info("")
         buses = self.available_elements(self.busses, "bus_disconnect")
-        self.__child = UIPickElement(self, "Disconnect Bus", buses, "bus_disconnect")
+        self.child = UIPickElement(self, "Disconnect Bus", buses, "bus_disconnect")
 
     def __disconnect_machine(self):
         logger.info("")
         machines = self.available_elements(self.machines, "machine_disconnect")
-        self.__child = UIPickElement(self, "Disconnect Machine", machines, "machine_disconnect")
+        self.child = UIPickElement(self, "Disconnect Machine", machines, "machine_disconnect")
 
     def __save(self):
         logger.info("")
         self.scenario.name = self.le_name.text()
         self.scenario.description = self.pte_description.toPlainText()
+        self.close()
+
+    def __back(self):
+        logger.info("")
+        if self.is_new:
+            self.parent.model.scenarios.pop()
         self.close()
 
     def __return_corresponding_clear_fault_index(self, index: int):
@@ -176,6 +185,7 @@ class UIScenario(QMainWindow):
 
     def set_window(self):
         logger.info("")
+        self.parent.hide()
         self.le_name.setText(self.scenario.name)
         self.pte_description.setPlainText(self.scenario.description)
         self.update_action_list()
@@ -189,6 +199,7 @@ class UIScenario(QMainWindow):
 
     def closeEvent(self, event):
         logger.info("")
+        self.parent.child = None
         self.parent.update_scenario_list()
         self.parent.show()
         event.accept()

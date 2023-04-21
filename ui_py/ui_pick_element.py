@@ -25,6 +25,7 @@ class UIPickElement(QDialog):
         self.set_window()
 
         self.pb_ok.clicked.connect(self.ok_clicked)
+        self.le_filter.textChanged.connect(self.filter_elements)
 
     def ok_clicked(self):
         element = self.cb_elements.currentData()
@@ -40,12 +41,17 @@ class UIPickElement(QDialog):
         self.parent.scenario.update_clear_faults_indexes()
         self.close()
 
+    def filter_elements(self):
+        self.cb_elements.clear()
+        for index, element in enumerate(self.__elements):
+            if self.le_filter.text() in element.full_name:
+                self.cb_elements.addItem(element.full_name, element)
+                if self.__action and self.__action.argument.name == element.name:
+                    self.cb_elements.setCurrentIndex(index)
+
     def set_window(self):
         self.lbl_title.setText(self.__name)
-        for index, element in enumerate(self.__elements):
-            self.cb_elements.addItem(element.full_name, element)
-            if self.__action and self.__action.argument.name == element.name:
-                self.cb_elements.setCurrentIndex(index)
+        self.filter_elements()
         self.show()
 
     def closeEvent(self, event):
