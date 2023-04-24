@@ -28,7 +28,7 @@ class MainMenu(QMainWindow):
 
     def __edit_assessment(self):
         logger.info("")
-        filepath, _ = QFileDialog.getOpenFileName(self, 'Browse', filter='*.json')
+        filepath, _ = QFileDialog.getOpenFileName(self, 'Browse', 'Assessments', filter='*.json')
         if not exists(filepath):
             return
         assessment = Assessment.load_from_json(filepath)
@@ -36,7 +36,7 @@ class MainMenu(QMainWindow):
 
     def __run_assessment(self):
         logger.info("")
-        filepath, _ = QFileDialog.getOpenFileName(self, 'Browse', filter='*.json')
+        filepath, _ = QFileDialog.getOpenFileName(self, 'Browse', 'Assessments', filter='*.json')
         if not exists(filepath):
             return
         assessment = Assessment.load_from_json(filepath)

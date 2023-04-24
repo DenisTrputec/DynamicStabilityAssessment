@@ -1,12 +1,14 @@
+from os.path import join
 from typing import TYPE_CHECKING
 
-from PyQt6.QtWidgets import QMainWindow
+from PyQt6.QtWidgets import QMainWindow, QFileDialog
 from PyQt6 import uic
 
 from dsa.assessment import Assessment
 from dsa.model import Model
 from ui_py.ui_model import UIModel
 from utils.logger import logger
+from utils.system_manager import SystemManager
 
 if TYPE_CHECKING:
     from dynamic_stability_assessment import MainMenu
@@ -51,6 +53,11 @@ class UIAssessment(QMainWindow):
 
     def __save(self):
         logger.info("")
+        SystemManager.create_folder("assessments")
+        filepath, _ = QFileDialog.getSaveFileName(self, 'Save As', join("assessments", f"{self.le_name.text()}.json"),
+                                                  filter='*.json')
+        if not filepath:
+            return
         self.assessment.name = self.le_name.text()
         self.assessment.description = self.pte_description.toPlainText()
         self.assessment.save()
