@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QMainWindow
 from PyQt6 import uic
 
 from dsa import psse
+from dsa import plot
 from dsa.model import Model
 from dsa.scenario import Scenario
 from utils.logger import logger
@@ -22,6 +23,8 @@ class UIRun(QMainWindow):
         uic.loadUi("ui/run.ui", self)
         self.__child = None
         self.__output_folder = os.path.join(output_folder, model.name)
+        self.__out_filepath = os.path.join(self.__output_folder, "task.outx")
+        self.__csv_filepath = os.path.join(self.__output_folder, "task.csv")
         self.__model = model
         self.__scenarios = scenarios
         self.__options = options
@@ -43,7 +46,7 @@ class UIRun(QMainWindow):
     def set_text_to_default(self):
         logger.info("")
         self.lbl_initialize.setText("")
-        self.lbl_task1.setText("")
+        self.lbl_task.setText("")
 
     def run_process(self):
         logger.info("")
@@ -54,6 +57,8 @@ class UIRun(QMainWindow):
             if not self.add_channels():
                 break
             if not self.run_task(scenario):
+                break
+            if not self.save_output():
                 break
 
     def initialize(self, index: int, scenario: Scenario):
@@ -94,9 +99,9 @@ class UIRun(QMainWindow):
 
     def run_task(self, scenario: Scenario):
         logger.info("")
-        self.lbl_task1.setText("Running")
+        self.lbl_task.setText("Running")
 
-        err_msg = psse.initialize_output(os.path.join(self.__output_folder, "task1.outx"))
+        err_msg = psse.initialize_output(self.__out_filepath)
         if err_msg:
             self.lbl_task1.setText(err_msg)
             return False
@@ -104,9 +109,18 @@ class UIRun(QMainWindow):
         for action in scenario.actions:
             action.activate()
 
-        psse.save_output(os.path.join(self.__output_folder, "task1.outx"), os.path.join(self.__output_folder, "task1.csv"))
+        psse.save_output(self.__out_filepath, self.__csv_filepath)
 
-        self.lbl_task1.setText("Done")
+        self.lbl_task.setText("Done")
+        return True
+
+    def save_output(self):
+        logger.info("")
+        self.lbl_save.setText("Running")
+
+        data = plot.read_csv(self.__csv_filepath)
+
+        self.lbl_save.setText("Done")
         return True
 
     def closeEvent(self, event):

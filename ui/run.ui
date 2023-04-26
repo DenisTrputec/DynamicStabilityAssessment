@@ -26,7 +26,7 @@
       <x>40</x>
       <y>100</y>
       <width>71</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -48,7 +48,7 @@
       <x>120</x>
       <y>100</y>
       <width>651</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -70,7 +70,7 @@
       <x>120</x>
       <y>40</y>
       <width>651</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -92,7 +92,7 @@
       <x>40</x>
       <y>40</y>
       <width>71</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -114,7 +114,7 @@
       <x>40</x>
       <y>70</y>
       <width>71</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -136,7 +136,7 @@
       <x>120</x>
       <y>70</y>
       <width>651</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -152,13 +152,13 @@
      <string>-</string>
     </property>
    </widget>
-   <widget class="QLabel" name="lbl_task1">
+   <widget class="QLabel" name="lbl_task">
     <property name="geometry">
      <rect>
       <x>120</x>
       <y>130</y>
       <width>651</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -174,13 +174,13 @@
      <string>-</string>
     </property>
    </widget>
-   <widget class="QLabel" name="lbl_task1_static">
+   <widget class="QLabel" name="lbl_task_static">
     <property name="geometry">
      <rect>
       <x>40</x>
       <y>130</y>
       <width>71</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -219,6 +219,50 @@
      <string>Run</string>
     </property>
    </widget>
+   <widget class="QLabel" name="lbl_save">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>160</y>
+      <width>651</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string/>
+    </property>
+    <property name="text">
+     <string>-</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_save_static">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>160</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string/>
+    </property>
+    <property name="text">
+     <string>Saving</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -226,7 +270,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

@@ -19,6 +19,8 @@ with open('config.json') as handle:
 import psspy
 from psspy import _f
 import dyntools
+import redirect
+redirect.psse2py()
 
 
 def initialize(busses=50000) -> str:
