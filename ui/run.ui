@@ -45,9 +45,9 @@
    <widget class="QLabel" name="lbl_initialize">
     <property name="geometry">
      <rect>
-      <x>120</x>
+      <x>140</x>
       <y>100</y>
-      <width>651</width>
+      <width>631</width>
       <height>21</height>
      </rect>
     </property>
@@ -67,9 +67,9 @@
    <widget class="QLabel" name="lbl_model">
     <property name="geometry">
      <rect>
-      <x>120</x>
+      <x>140</x>
       <y>40</y>
-      <width>651</width>
+      <width>631</width>
       <height>21</height>
      </rect>
     </property>
@@ -133,9 +133,9 @@
    <widget class="QLabel" name="lbl_scenario">
     <property name="geometry">
      <rect>
-      <x>120</x>
+      <x>140</x>
       <y>70</y>
-      <width>651</width>
+      <width>631</width>
       <height>21</height>
      </rect>
     </property>
@@ -155,9 +155,9 @@
    <widget class="QLabel" name="lbl_task">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>130</y>
-      <width>651</width>
+      <x>140</x>
+      <y>160</y>
+      <width>631</width>
       <height>21</height>
      </rect>
     </property>
@@ -178,7 +178,7 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>130</y>
+      <y>160</y>
       <width>71</width>
       <height>21</height>
      </rect>
@@ -193,7 +193,7 @@
      <string/>
     </property>
     <property name="text">
-     <string>Task 1</string>
+     <string>Task</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pb_run">
@@ -222,9 +222,9 @@
    <widget class="QLabel" name="lbl_save">
     <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>160</y>
-      <width>651</width>
+      <x>140</x>
+      <y>190</y>
+      <width>631</width>
       <height>21</height>
      </rect>
     </property>
@@ -245,7 +245,7 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>160</y>
+      <y>190</y>
       <width>71</width>
       <height>21</height>
      </rect>
@@ -261,6 +261,50 @@
     </property>
     <property name="text">
      <string>Saving</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_channels">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>130</y>
+      <width>631</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string/>
+    </property>
+    <property name="text">
+     <string>-</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_channels_static">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>130</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="statusTip">
+     <string/>
+    </property>
+    <property name="text">
+     <string>Add Channels</string>
     </property>
    </widget>
   </widget>
