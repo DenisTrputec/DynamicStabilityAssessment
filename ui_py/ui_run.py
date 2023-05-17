@@ -113,22 +113,29 @@ class UIRun(QMainWindow):
 
     def run_process(self):
         logger.info("")
-        for index, scenario in enumerate(self.scenarios):
-            self.current_index = index
-            self.current_scenario = scenario
-            self.set_text_to_default()
+        self.current_index = 0
+        self.first_run()
+        # for index, scenario in enumerate(self.scenarios):
+        #     self.current_index = index
+        #     self.current_scenario = scenario
+        #     self.set_text_to_default()
+        #
+        #     # Multithreading
+        #     self.next_step("Run Process")
+        #     if not self.initialize(index, scenario):
+        #         break
+        #     if not self.add_channels():
+        #         break
+        #     if not self.run_task(scenario):
+        #         break
+        #     if not self.save_output():
+        #         break
 
-            # Multithreading
-            self.next_step("Run Process")
-
-            # if not self.initialize(index, scenario):
-            #     break
-            # if not self.add_channels():
-            #     break
-            # if not self.run_task(scenario):
-            #     break
-            # if not self.save_output():
-            #     break
+    def first_run(self):
+        logger.info("")
+        self.current_scenario = self.scenarios[self.current_index]
+        self.set_text_to_default()
+        self.next_step("Run Process")
 
     def next_step(self, msg: str):
         if msg == "Run Process":
@@ -175,69 +182,72 @@ class UIRun(QMainWindow):
         elif msg.startswith("Save:"):
             if msg.endswith("Done"):
                 self.lbl_save.setText("Done")
+                if self.current_index < len(self.scenarios) - 1:
+                    self.current_index += 1
+                    self.first_run()
             else:
                 self.lbl_save.setText(msg)
 
-    def initialize(self, index: int, scenario: Scenario):
-        logger.info("")
-        self.lbl_scenario.setText(f"{scenario.name}   {index + 1}/{len(self.scenarios)}")
-        functions = [(psse.initialize, None),
-                     (psse.read_model_file, self.model.raw_path),
-                     (psse.read_dynamics_file, self.model.dyr_path),
-                     (psse.convert_model, None),
-                     (psse.set_dynamic_parameters, None),
-                     ]
-        for f, arg in functions:
-            err_msg = f(arg) if arg else f()
-            if err_msg:
-                self.lbl_initialize.setText(err_msg)
-                return False
-        self.lbl_initialize.setText("Done")
-        return True
-
-    def add_channels(self):
-        psse.reset_plot_channels()
-        busses = psse.read_bus_data(filters=self.filters)
-        branches = psse.read_branch_data(filters=self.filters)
-        for bus in busses.values():
-            if self.options["bus_u"]:
-                err_msg = psse.add_bus_u_channel(bus)
-                if err_msg:
-                    self.lbl_task.setText(f"Error: {err_msg}")
-                    return False
-        for branch in branches.values():
-            if self.options["branch_p"]:
-                err_msg = psse.add_branch_p_channel(branch)
-                if err_msg:
-                    self.lbl_task.setText(f"Error: {err_msg}")
-                    return False
-        return True
-
-    def run_task(self, scenario: Scenario):
-        logger.info("")
-        self.lbl_task.setText("Running")
-
-        err_msg = psse.initialize_output(self.out_filepath)
-        if err_msg:
-            self.lbl_task.setText(err_msg)
-            return False
-
-        for action in scenario.actions:
-            action.activate()
-
-        psse.save_output(self.out_filepath, self.csv_filepath)
-
-        self.lbl_task.setText("Done")
-        return True
-
-    def save_output(self):
-        logger.info("")
-        self.lbl_save.setText("Running")
-
-        data = plot.read_csv(self.csv_filepath)
-
-        self.lbl_save.setText("Done")
-        return True
+    # def initialize(self, index: int, scenario: Scenario):
+    #     logger.info("")
+    #     self.lbl_scenario.setText(f"{scenario.name}   {index + 1}/{len(self.scenarios)}")
+    #     functions = [(psse.initialize, None),
+    #                  (psse.read_model_file, self.model.raw_path),
+    #                  (psse.read_dynamics_file, self.model.dyr_path),
+    #                  (psse.convert_model, None),
+    #                  (psse.set_dynamic_parameters, None),
+    #                  ]
+    #     for f, arg in functions:
+    #         err_msg = f(arg) if arg else f()
+    #         if err_msg:
+    #             self.lbl_initialize.setText(err_msg)
+    #             return False
+    #     self.lbl_initialize.setText("Done")
+    #     return True
+    #
+    # def add_channels(self):
+    #     psse.reset_plot_channels()
+    #     busses = psse.read_bus_data(filters=self.filters)
+    #     branches = psse.read_branch_data(filters=self.filters)
+    #     for bus in busses.values():
+    #         if self.options["bus_u"]:
+    #             err_msg = psse.add_bus_u_channel(bus)
+    #             if err_msg:
+    #                 self.lbl_task.setText(f"Error: {err_msg}")
+    #                 return False
+    #     for branch in branches.values():
+    #         if self.options["branch_p"]:
+    #             err_msg = psse.add_branch_p_channel(branch)
+    #             if err_msg:
+    #                 self.lbl_task.setText(f"Error: {err_msg}")
+    #                 return False
+    #     return True
+    #
+    # def run_task(self, scenario: Scenario):
+    #     logger.info("")
+    #     self.lbl_task.setText("Running")
+    #
+    #     err_msg = psse.initialize_output(self.out_filepath)
+    #     if err_msg:
+    #         self.lbl_task.setText(err_msg)
+    #         return False
+    #
+    #     for action in scenario.actions:
+    #         action.activate()
+    #
+    #     psse.save_output(self.out_filepath, self.csv_filepath)
+    #
+    #     self.lbl_task.setText("Done")
+    #     return True
+    #
+    # def save_output(self):
+    #     logger.info("")
+    #     self.lbl_save.setText("Running")
+    #
+    #     data = plot.read_csv(self.csv_filepath)
+    #
+    #     self.lbl_save.setText("Done")
+    #     return True
 
     def closeEvent(self, event):
         logger.info("")
