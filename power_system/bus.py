@@ -38,6 +38,9 @@ class Bus:
     def is_voltage_level(self, value):
         return True if self.base == value else False
 
+    def is_zone_number(self, value):
+        return True if self.zone == value else False
+
 
 if __name__ == '__main__':
     b = Bus(10000, "Zagreb", 400.0, 1, 16, 11)

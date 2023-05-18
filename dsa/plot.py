@@ -5,10 +5,6 @@ from pandas.core.frame import DataFrame
 from pandas.core.series import Series
 from matplotlib import pyplot as plt
 
-from power_system.bus import Bus
-from power_system.branch import Branch
-from power_system.machine import Machine
-
 
 def read_csv(filepath: str) -> DataFrame:
     return pandas.read_csv(filepath, delimiter=', ', skiprows=1, encoding='latin-1', engine='python')
@@ -17,20 +13,23 @@ def read_csv(filepath: str) -> DataFrame:
 def filter_data(data: DataFrame, channels: list, filter_options: dict):
     """
     filter_options: {
-        "type": str     # 'voltage_level', 'control_center',
-        "groups": list  # [400, 220, 110], '[1, 2, 3, 4]'
+        "type": str     # 'voltage_level', 'zone_number'
+        "groups": list  # [400, 220, 110], [1, 2, 3, 4]
     }
     :return:
     """
     indexes = {x: []for x in filter_options["groups"]}
 
-    if filter_options["type"] == "voltage_level":
-        for i, element in enumerate(channels):
-            if isinstance(element, Bus):
-                for key in indexes.keys():
-                    if element.is_voltage_level(key):
-                        indexes[key].append(i)
-                        break
+    for i, element in enumerate(channels):
+        for key in indexes.keys():
+            if filter_options["type"] == "voltage_level":
+                if element.is_voltage_level(key):
+                    indexes[key].append(i)
+                    break
+            elif filter_options["type"] == "zone_number":
+                if element.is_zone_number(key):
+                    indexes[key].append(i)
+                    break
 
     new_data = {k: data.iloc[:, indexes[k]] for k, v in indexes.items()}
     return new_data
@@ -60,6 +59,7 @@ def plot_figure(x: Series, x_label: str, y_values: List[Series], y_labels: List[
 if __name__ == "__main__":
     # data = read_csv("E:\\Python3\\DynamicStabilityAssessment\\output\\S10\\task1.csv")
     my_data = read_csv("E:\\Python3\\DynamicStabilityAssessment\\output\\S10\\task.csv")
+    from power_system.bus import Bus
     my_channels = [
         Bus(1, "1", 400, 1, 1, 1),
         Bus(2, "2", 220, 1, 1, 1),

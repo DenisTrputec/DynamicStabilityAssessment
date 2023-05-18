@@ -42,3 +42,6 @@ class Branch:
 
     def is_voltage_level(self, value):
         return True if self.bus1.base == value else False
+
+    def is_zone_number(self, value):
+        return True if self.bus1.zone == value else False

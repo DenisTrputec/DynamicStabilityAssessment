@@ -39,3 +39,6 @@ class Machine:
 
     def is_voltage_level(self, value):
         return True if self.bus.base == value else False
+
+    def is_zone_number(self, value):
+        return True if self.bus.zone == value else False
