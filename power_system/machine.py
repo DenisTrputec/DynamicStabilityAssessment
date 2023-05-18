@@ -36,3 +36,6 @@ class Machine:
         mode = json_string["mode"]
         instance = Machine(bus, machine_id, status, mode)
         return instance
+
+    def is_voltage_level(self, value):
+        return True if self.bus.base == value else False

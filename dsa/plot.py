@@ -5,9 +5,35 @@ from pandas.core.frame import DataFrame
 from pandas.core.series import Series
 from matplotlib import pyplot as plt
 
+from power_system.bus import Bus
+from power_system.branch import Branch
+from power_system.machine import Machine
+
 
 def read_csv(filepath: str) -> DataFrame:
     return pandas.read_csv(filepath, delimiter=', ', skiprows=1, encoding='latin-1', engine='python')
+
+
+def filter_data(data: DataFrame, channels: list, filter_options: dict):
+    """
+    filter_options: {
+        "type": str     # 'voltage_level', 'control_center',
+        "groups": list  # [400, 220, 110], '[1, 2, 3, 4]'
+    }
+    :return:
+    """
+    indexes = {x: []for x in filter_options["groups"]}
+
+    if filter_options["type"] == "voltage_level":
+        for i, element in enumerate(channels):
+            if isinstance(element, Bus):
+                for key in indexes.keys():
+                    if element.is_voltage_level(key):
+                        indexes[key].append(i)
+                        break
+
+    new_data = {k: data.iloc[:, indexes[k]] for k, v in indexes.items()}
+    return new_data
 
 
 def plot_figure(x: Series, x_label: str, y_values: List[Series], y_labels: List[str],
@@ -33,10 +59,19 @@ def plot_figure(x: Series, x_label: str, y_values: List[Series], y_labels: List[
 
 if __name__ == "__main__":
     # data = read_csv("E:\\Python3\\DynamicStabilityAssessment\\output\\S10\\task1.csv")
-    data = read_csv("E:\\Python3\\DynamicStabilityAssessment\\output\\temp.csv")
-
-    y1 = data.iloc[:, 1:15]
-    y2 = data.iloc[:, 15:19]
-
-    plot_figure(data.iloc[:, 0], "x", [y1, y2], ["y1", "y2"],
+    my_data = read_csv("E:\\Python3\\DynamicStabilityAssessment\\output\\S10\\task.csv")
+    my_channels = [
+        Bus(1, "1", 400, 1, 1, 1),
+        Bus(2, "2", 220, 1, 1, 1),
+        Bus(3, "3", 220, 1, 1, 1),
+        Bus(4, "4", 400, 1, 1, 1),
+        Bus(5, "5", 110, 1, 1, 1),
+    ]
+    my_options = {
+        "type": "voltage_level",
+        "groups": [400, 220, 110]
+    }
+    y_dataframes = filter_data(my_data.iloc[:, 1:], my_channels, my_options)
+    print(list(y_dataframes.values()))
+    plot_figure(my_data.iloc[:, 0], "x", list(y_dataframes.values()), ["400", "220", "110"],
                 "E:\\Python3\\DynamicStabilityAssessment\\output\\test.png", "My Title")

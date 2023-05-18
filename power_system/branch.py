@@ -39,3 +39,6 @@ class Branch:
         status = json_string["status"]
         instance = Branch(bus1, bus2, branch_id, status)
         return instance
+
+    def is_voltage_level(self, value):
+        return True if self.bus1.base == value else False

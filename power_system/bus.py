@@ -35,6 +35,9 @@ class Bus:
         instance = Bus(number, name, base, bus_type, area, zone)
         return instance
 
+    def is_voltage_level(self, value):
+        return True if self.base == value else False
+
 
 if __name__ == '__main__':
     b = Bus(10000, "Zagreb", 400.0, 1, 16, 11)

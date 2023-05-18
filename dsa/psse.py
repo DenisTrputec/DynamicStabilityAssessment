@@ -139,7 +139,7 @@ def add_bus_u_channel(bus: Bus):
 
 
 def add_branch_p_channel(branch: Branch):
-    logger.info(f"Add Voltage Channel for Bus: {branch.name}")
+    logger.info(f"Add Voltage Channel for Branch: {branch.name}")
     return psse_error.branch_p_channel[
         psspy.branch_p_channel(status=[-1, -1, -1, branch.bus1.number, branch.bus2.number],
                                id=branch.id, ident=branch.name)]
