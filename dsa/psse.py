@@ -9,7 +9,7 @@ from power_system.machine import Machine
 from utils.logger import logger
 
 
-with open('config.json') as handle:
+with open('../config.json') as handle:
     config = json.load(handle)
     for key in config["psse"]:
         path = config["psse"][key]
@@ -21,6 +21,22 @@ from psspy import _f
 import dyntools
 import redirect
 redirect.psse2py()
+OLD_STDOUT = sys.stdout    # Keep track of what the original output to terminal was
+
+
+def silence():
+    """
+    Direct stdout to txt output file
+    """
+    sys.stdout = open("temp.txt", "w")
+    return
+
+
+def unsilence():
+    """
+    Reset stdout to the terminal like normal
+    """
+    sys.stdout = OLD_STDOUT
 
 
 def initialize(busses=50000) -> str:

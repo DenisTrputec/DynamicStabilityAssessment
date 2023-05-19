@@ -57,21 +57,29 @@ def plot_figure(x: Series, x_label: str, y_values: List[Series], y_labels: List[
 
 
 if __name__ == "__main__":
-    # data = read_csv("E:\\Python3\\DynamicStabilityAssessment\\output\\S10\\task1.csv")
     my_data = read_csv("E:\\Python3\\DynamicStabilityAssessment\\output\\S10\\task.csv")
+
     from power_system.bus import Bus
     my_channels = [
         Bus(1, "1", 400, 1, 1, 1),
         Bus(2, "2", 220, 1, 1, 1),
-        Bus(3, "3", 220, 1, 1, 1),
+        Bus(3, "3", 220, 1, 1, 2),
         Bus(4, "4", 400, 1, 1, 1),
-        Bus(5, "5", 110, 1, 1, 1),
+        Bus(5, "5", 110, 1, 1, 3),
     ]
+
     my_options = {
         "type": "voltage_level",
         "groups": [400, 220, 110]
     }
     y_dataframes = filter_data(my_data.iloc[:, 1:], my_channels, my_options)
-    print(list(y_dataframes.values()))
     plot_figure(my_data.iloc[:, 0], "x", list(y_dataframes.values()), ["400", "220", "110"],
                 "E:\\Python3\\DynamicStabilityAssessment\\output\\test.png", "My Title")
+
+    my_options2 = {
+        "type": "zone_number",
+        "groups": [1, 2, 3, 4]
+    }
+    y_dataframes2 = filter_data(my_data.iloc[:, 1:], my_channels, my_options2)
+    plot_figure(my_data.iloc[:, 0], "x", list(y_dataframes2.values()), ["Zona 1", "Zona 2", "Zona 3", "Zona 4"],
+                "E:\\Python3\\DynamicStabilityAssessment\\output\\test2.png", "My Title")
