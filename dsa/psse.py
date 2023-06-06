@@ -237,4 +237,5 @@ if __name__ == '__main__':
 
     initialize_output(r"""E:\Python3\DynamicStabilityAssessment\output\temp.out""")
     simulation(1)
-    save_output(r"""E:\Python3\DynamicStabilityAssessment\output\temp.out""", r"""E:\Python3\DynamicStabilityAssessment\output\temp.csv""")
+    save_output(r"""E:\Python3\DynamicStabilityAssessment\output\temp.out""",
+                r"""E:\Python3\DynamicStabilityAssessment\output\temp.csv""")

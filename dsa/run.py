@@ -3,6 +3,7 @@ from typing import List
 
 from dsa import psse
 from dsa import plot
+from dsa.assessment import Assessment
 from dsa.model import Model
 from dsa.scenario import Scenario
 from options import Option, OptionType, GroupByType
@@ -11,17 +12,18 @@ from utils.system_manager import SystemManager
 
 
 class Run:
-    def __init__(self, output_folder: str, model: Model, scenarios: List[Scenario], options: List[Option],
-                 filters: dict):
+    def __init__(self, output_folder: str, assessment: Assessment, model: Model, scenarios: List[Scenario],
+                 options: List[Option], filters: dict):
         self.output_folder = os.path.join(output_folder, model.name)
         self.out_filepath = os.path.join(self.output_folder, "task.outx")
         self.csv_filepath = os.path.join(self.output_folder, "task.csv")
+        self.assessment = assessment
         self.model = model
         self.scenarios = scenarios
         self.options = options
         self.filters = filters
 
-        self.channels = []
+        self.channels = {OptionType.BusU: [], OptionType.BranchP: []}
         self.current_index = 0
         self.current_scenario = self.scenarios[self.current_index]
 
@@ -54,21 +56,21 @@ class Run:
         busses = psse.read_bus_data(filters=self.filters)
         branches = psse.read_branch_data(filters=self.filters)
 
-        def add(elements, function):
+        def add(elements, function, option_key):
             for element in elements:
                 err_msg = function(element)
                 if err_msg:
                     return err_msg
                 else:
-                    self.channels.append(element)
+                    self.channels[option_key].append(element)
 
         for option in self.options:
             if option.in_use and option.type == OptionType.BusU:
-                msg = add(busses.values(), psse.add_bus_u_channel)
+                msg = add(busses.values(), psse.add_bus_u_channel, OptionType.BusU)
                 if msg:
                     return msg
             elif option.in_use and option.type == OptionType.BranchP:
-                msg = add(branches.values(), psse.add_branch_p_channel)
+                msg = add(branches.values(), psse.add_branch_p_channel, OptionType.BranchP)
                 if msg:
                     return msg
 
@@ -88,12 +90,42 @@ class Run:
     def save_output(self):
         logger.info("")
         data = plot.read_csv(self.csv_filepath)
-        print(data)
+        data_x = data.iloc[:, 0]
+
+        option = [o for o in self.options if o.type == OptionType.BusU][0]
+        options_page = {
+            "type": option.group_by_page_type,
+            "groups": option.group_by_page_values
+        }
+        data_pages, elements_pages = plot.filter_data(data.iloc[:, 1:], self.channels[option.type], options_page)
+        options_subplot = {
+            "type": option.group_by_subplot_type,
+            "groups": option.group_by_subplot_values
+        }
+        # Create output folder for scenario pngs
+        folder_path = os.path.join(self.output_folder, self.current_scenario.name)
+        SystemManager.create_folder(folder_path)
+
+        for i, (key, data_page) in enumerate(data_pages.items()):
+            if option.group_by_subplot_in_use[i]:
+                # Filtered data grouped by subplots
+                data_subplots, _ = plot.filter_data(data_page, elements_pages[key], options_subplot)
+                y_values = list(data_subplots.values())
+                y_labels = list(data_subplots.keys())
+            else:
+                y_values = [data_page]
+                y_labels = [key]
+
+            figure_title = f"{self.assessment.name}\n" \
+                           f"{self.model.description}\n" \
+                           f"{self.current_scenario.description}"
+
+            plot.plot_figure(x=data_x, x_label="Time(s)",
+                             y_values=y_values, y_labels=y_labels,
+                             figure_path=os.path.join(folder_path, f"{key}.png"), figure_title=figure_title)
 
 
 if __name__ == "__main__":
-    from dsa.assessment import Assessment
-
     my_assessment = Assessment.load_from_json(
         "E:\\Python3\\DynamicStabilityAssessment\\assessments\\Procjena Dinamicke Stabilnosti.json")
     my_model = my_assessment.models[0]
@@ -103,17 +135,18 @@ if __name__ == "__main__":
                          group_by_page_type=GroupByType.VoltageLevel,
                          group_by_page_values=[400, 220, 110],
                          group_by_subplot_type=GroupByType.ZoneNumber,
-                         group_by_subplot_values=[1, 2, 3, 4],
+                         group_by_subplot_values=[1, 3, 5],
                          group_by_subplots_in_use=[False, True, True]),
                   Option(option_type=OptionType.BranchP,
                          in_use=False,
                          group_by_page_type=GroupByType.VoltageLevel,
                          group_by_page_values=[400, 220, 110],
                          group_by_subplot_type=GroupByType.ZoneNumber,
-                         group_by_subplot_values=[1, 2, 3, 4],
+                         group_by_subplot_values=[1, 3, 5],
                          group_by_subplots_in_use=[False, True, True])
                   ]
     my_run = Run(output_folder="E:\\Python3\\DynamicStabilityAssessment\\output\\test",
+                 assessment=my_assessment,
                  model=my_model,
                  scenarios=my_scenarios_used,
                  options=my_options,

@@ -21,6 +21,15 @@ class Option:
         self.in_use = in_use
         self.group_by_page_type = group_by_page_type
         self.group_by_page_values = group_by_page_values
-        self.group_by_subplots_type = group_by_subplot_type
-        self.group_by_subplots_values = group_by_subplot_values
-        self.group_by_subplots_in_use = group_by_subplots_in_use
+        self.group_by_subplot_type = group_by_subplot_type
+        self.group_by_subplot_values = group_by_subplot_values
+        self.group_by_subplot_in_use = group_by_subplots_in_use
+
+    def __str__(self):
+        return f"Type: {self.type}" \
+               f"In sse: {self.in_use}" \
+               f"Group by page type: {self.group_by_page_type}" \
+               f"Group by page values: {self.group_by_page_values}" \
+               f"Group by subplot type: {self.group_by_subplot_type}" \
+               f"Group by subplot values: {self.group_by_subplot_values}" \
+               f"Group by subplot - In use: {self.group_by_subplot_in_use}\n"
