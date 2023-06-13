@@ -169,7 +169,7 @@ def save_output(out_filepath: str, save_filepath: str):
 
 
 def simulation(time: float):
-    logger.info(f"Simulation: {time}s]")
+    logger.info(f"Simulation: {time}s")
     return psse_error.run[psspy.run(tpause=time)]
 
 

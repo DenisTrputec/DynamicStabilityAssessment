@@ -16,6 +16,10 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>logo/hops-logo.JPG</normaloff>logo/hops-logo.JPG</iconset>
+  </property>
   <widget class="QLabel" name="lbl_title">
    <property name="geometry">
     <rect>

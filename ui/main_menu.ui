@@ -19,12 +19,16 @@
   <property name="windowTitle">
    <string>Dynamic Stability Assessment</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>logo/hops-logo.JPG</normaloff>logo/hops-logo.JPG</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="pb_create_assessment">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>30</y>
+      <x>150</x>
+      <y>170</y>
       <width>211</width>
       <height>81</height>
      </rect>
@@ -45,8 +49,8 @@
    <widget class="QPushButton" name="pb_edit_assessment">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>140</y>
+      <x>440</x>
+      <y>170</y>
       <width>211</width>
       <height>81</height>
      </rect>
@@ -67,8 +71,8 @@
    <widget class="QPushButton" name="pb_run_assessment">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>250</y>
+      <x>150</x>
+      <y>310</y>
       <width>211</width>
       <height>81</height>
      </rect>
@@ -89,8 +93,8 @@
    <widget class="QPushButton" name="pb_quit">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>360</y>
+      <x>440</x>
+      <y>310</y>
       <width>211</width>
       <height>81</height>
      </rect>
@@ -106,6 +110,46 @@
     </property>
     <property name="text">
      <string>Quit</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_footer">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>480</y>
+      <width>781</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>logo/HOPS-skraćeni-naziv-s-trakom-sinusoida.jpg</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbl_title">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>30</y>
+      <width>421</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>24</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>   Application for creating a
+Dynamic Stability Assessment</string>
     </property>
    </widget>
   </widget>

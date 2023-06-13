@@ -18,6 +18,10 @@
   <property name="windowTitle">
    <string>Dynamic Stability Assessment</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>logo/hops-logo.JPG</normaloff>logo/hops-logo.JPG</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="lbl_name">
     <property name="geometry">

@@ -120,7 +120,7 @@ class Run:
                            f"{self.model.description}\n" \
                            f"{self.current_scenario.description}"
 
-            plot.plot_figure(x=data_x, x_label="Time(s)",
+            plot.plot_figure(x=data_x, x_label="Time (s)",
                              y_values=y_values, y_labels=y_labels,
                              figure_path=os.path.join(folder_path, f"{key}.png"), figure_title=figure_title)
 
@@ -135,14 +135,14 @@ if __name__ == "__main__":
                          group_by_page_type=GroupByType.VoltageLevel,
                          group_by_page_values=[400, 220, 110],
                          group_by_subplot_type=GroupByType.ZoneNumber,
-                         group_by_subplot_values=[1, 3, 5],
+                         group_by_subplot_values=[1601, 1602, 1603, 1604],
                          group_by_subplots_in_use=[False, True, True]),
                   Option(option_type=OptionType.BranchP,
-                         in_use=False,
+                         in_use=True,
                          group_by_page_type=GroupByType.VoltageLevel,
                          group_by_page_values=[400, 220, 110],
                          group_by_subplot_type=GroupByType.ZoneNumber,
-                         group_by_subplot_values=[1, 3, 5],
+                         group_by_subplot_values=[1601, 1602, 1603, 1604],
                          group_by_subplots_in_use=[False, True, True])
                   ]
     my_run = Run(output_folder="E:\\Python3\\DynamicStabilityAssessment\\output\\test",
